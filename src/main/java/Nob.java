@@ -1,7 +1,14 @@
+import java.util.Scanner;
+
 /**
  * Starts the Nob chatbot application.
  */
 public class Nob {
+    /**
+     * Reads and responds to commands until the user enters {@code bye}.
+     *
+     * @param args command-line arguments, which this application does not use
+     */
     public static void main(String[] args) {
         String divider = "____________________________________________________________";
         String banner = """
@@ -12,7 +19,7 @@ public class Nob {
                 |_| \\_|\\___/|_.__/
                 """;
         String greeting = """
-                Hello! I'm Nob.
+                Hi! I'm Nob :)
                 What's up?
                 """;
         String farewell = "Goodbye! Hope to see you soon!";
@@ -21,7 +28,23 @@ public class Nob {
         System.out.print(banner);
         System.out.print(greeting);
         System.out.println(divider);
-        System.out.println(farewell);
-        System.out.println(divider);
+
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (scanner.hasNextLine()) {
+                String command = scanner.nextLine();
+                System.out.println(divider);
+
+                //exit command
+                if (command.equals("bye")) {
+                    System.out.println(farewell);
+                    System.out.println(divider);
+                    break;
+                }
+
+                //echo
+                System.out.println(command);
+                System.out.println(divider);
+            }
+        }
     }
 }
