@@ -26,4 +26,24 @@ public class Task {
     public String getStatusIcon() {
         return isDone ? "✓" : " ";
     }
+
+    /** Marks this task as completed. */
+    public void markAsDone() {
+        isDone = true;
+    }
+
+    /** Marks this task as incomplete. */
+    public void markAsUndone() {
+        isDone = false;
+    }
+
+    /**
+     * Returns this task in the format used when displaying a task list.
+     *
+     * @return the task status icon and description
+     */
+    @Override
+    public String toString() {
+        return description + " [" + getStatusIcon() + "]";
+    }
 }
