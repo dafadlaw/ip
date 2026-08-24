@@ -202,7 +202,7 @@ public class Nob {
         tasks[taskCount] = task;
         System.out.println("Alrighty. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + (taskCount + 1) + " tasks in the list. LET'S GOOO!");
+        System.out.println("Now you have " + (taskCount + 1) + " tasks in the list.");
         return taskCount + 1;
     }
 
@@ -226,7 +226,7 @@ public class Nob {
             Task task = tasks[taskNumber - 1];
             if (isDone) {
                 task.markAsDone();
-                System.out.println("Great job! I've marked this task as done:");
+                System.out.println("LET'S GOOO! I've marked this task as done:");
             } else {
                 task.markAsUndone();
                 System.out.println("Okay... I've marked this task as not done yet:");
