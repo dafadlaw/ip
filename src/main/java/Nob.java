@@ -26,12 +26,13 @@ public class Nob {
                   (•_•)
                   ( •_•)>⌐■-■
                   (⌐■_■)
+
                 """;
         String greeting = """
-                Hii! I'm Nob :)
-                What's up?
+                WASSUP! I'm Nob :)
+                How can I help you?
                 """;
-        String farewell = "Goodbye! Hope to see you soon!";
+        String farewell = "Goodbye! Hope to see you soon mate!";
 
         System.out.println(divider);
         System.out.print(banner);
@@ -43,32 +44,36 @@ public class Nob {
                 String command = scanner.nextLine();
                 System.out.println(divider);
 
-                if (command.equals("bye")) {
-                    System.out.println(farewell);
-                    System.out.println(divider);
-                    break;
-                }
+                try {
+                    if (command.equals("bye")) {
+                        System.out.println(farewell);
+                        System.out.println(divider);
+                        break;
+                    }
 
-                if (command.equals("list")) {
-                    printTasks(tasks, taskCount);
-                } else if (command.startsWith("mark ")) {
-                    markTask(command, tasks, taskCount, true);
-                } else if (command.startsWith("unmark ")) {
-                    markTask(command, tasks, taskCount, false);
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    taskCount = addTodo(command, tasks, taskCount);
-                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    taskCount = addDeadline(command, tasks, taskCount);
-                } else if (command.equals("event") || command.startsWith("event ")) {
-                    taskCount = addEvent(command, tasks, taskCount);
-                } else if (command.startsWith("todo")) {
-                    showMissingSpaceHint("todo", command);
-                } else if (command.startsWith("deadline")) {
-                    showMissingSpaceHint("deadline", command);
-                } else if (command.startsWith("event")) {
-                    showMissingSpaceHint("event", command);
-                } else {
-                    showUnknownCommandHint();
+                    if (command.equals("list")) {
+                        printTasks(tasks, taskCount);
+                    } else if (command.startsWith("mark ")) {
+                        markTask(command, tasks, taskCount, true);
+                    } else if (command.startsWith("unmark ")) {
+                        markTask(command, tasks, taskCount, false);
+                    } else if (command.equals("todo") || command.startsWith("todo ")) {
+                        taskCount = addTodo(command, tasks, taskCount);
+                    } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+                        taskCount = addDeadline(command, tasks, taskCount);
+                    } else if (command.equals("event") || command.startsWith("event ")) {
+                        taskCount = addEvent(command, tasks, taskCount);
+                    } else if (command.startsWith("todo")) {
+                        showMissingSpaceHint("todo", command);
+                    } else if (command.startsWith("deadline")) {
+                        showMissingSpaceHint("deadline", command);
+                    } else if (command.startsWith("event")) {
+                        showMissingSpaceHint("event", command);
+                    } else {
+                        showUnknownCommandHint();
+                    }
+                } catch (NobException exception) {
+                    System.out.println(exception.getMessage());
                 }
                 System.out.println(divider);
             }
@@ -83,12 +88,10 @@ public class Nob {
      * @param taskCount number of valid tasks in the array
      * @return the updated number of valid tasks
      */
-    private static int addTodo(String command, Task[] tasks, int taskCount) {
+    private static int addTodo(String command, Task[] tasks, int taskCount) throws NobException {
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
-            System.out.println("Use: todo DESCRIPTION");
-            System.out.println("(eg., todo borrow book)");
-            return taskCount;
+            throw new NobException("Use: todo DESCRIPTION\n(eg., todo borrow book)");
         }
 
         return addTask(new Todo(description), tasks, taskCount);
@@ -140,16 +143,17 @@ public class Nob {
      * @param taskCount number of valid tasks in the array
      * @return the updated number of valid tasks
      */
-    private static int addDeadline(String command, Task[] tasks, int taskCount) {
+    private static int addDeadline(String command, Task[] tasks, int taskCount) throws NobException {
         String details = command.substring("deadline".length()).trim();
         int byIndex = details.indexOf(" /by ");
         if (byIndex < 1 || byIndex + " /by ".length() == details.length()) {
             if (details.contains("/by")) {
-                System.out.println("Check that there is a space before and after '/by'.");
+                throw new NobException("Check that there is a space before and after '/by'.\n"
+                        + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                        + "(eg., deadline return book /by Sunday)");
             }
-            System.out.println("Use: deadline DESCRIPTION /by DATE_OR_TIME");
-            System.out.println("(eg., deadline return book /by Sunday)");
-            return taskCount;
+            throw new NobException("Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                    + "(eg., deadline return book /by Sunday)");
         }
 
         String description = details.substring(0, byIndex).trim();
@@ -165,18 +169,19 @@ public class Nob {
      * @param taskCount number of valid tasks in the array
      * @return the updated number of valid tasks
      */
-    private static int addEvent(String command, Task[] tasks, int taskCount) {
+    private static int addEvent(String command, Task[] tasks, int taskCount) throws NobException {
         String details = command.substring("event".length()).trim();
         int fromIndex = details.indexOf(" /from ");
         int toIndex = details.indexOf(" /to ");
         if (fromIndex < 1 || toIndex <= fromIndex + " /from ".length()
                 || toIndex + " /to ".length() == details.length()) {
             if (details.contains("/from") || details.contains("/to")) {
-                System.out.println("Check that there is a space before and after '/from' and '/to'.");
+                throw new NobException("Check that there is a space before and after '/from' and '/to'.\n"
+                        + "Use: event DESCRIPTION /from START /to END\n"
+                        + "(eg., event project meeting /from Mon 2pm /to 4pm)");
             }
-            System.out.println("Use: event DESCRIPTION /from START /to END");
-            System.out.println("(eg., event project meeting /from Mon 2pm /to 4pm)");
-            return taskCount;
+            throw new NobException("Use: event DESCRIPTION /from START /to END\n"
+                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
         }
 
         String description = details.substring(0, fromIndex).trim();
@@ -214,26 +219,28 @@ public class Nob {
      * @param taskCount number of valid tasks in the array
      * @param isDone whether the task should be marked as completed
      */
-    private static void markTask(String command, Task[] tasks, int taskCount, boolean isDone) {
+    private static void markTask(String command, Task[] tasks, int taskCount, boolean isDone)
+            throws NobException {
         String numberText = command.substring(command.indexOf(' ') + 1).trim();
+        int taskNumber;
         try {
-            int taskNumber = Integer.parseInt(numberText);
-            if (taskNumber < 1 || taskNumber > taskCount) {
-                System.out.println("Please enter a task number from 1 to " + taskCount + ".");
-                return;
-            }
-
-            Task task = tasks[taskNumber - 1];
-            if (isDone) {
-                task.markAsDone();
-                System.out.println("LET'S GOOO! I've marked this task as done:");
-            } else {
-                task.markAsUndone();
-                System.out.println("Okay... I've marked this task as not done yet:");
-            }
-            System.out.println("  " + task);
+            taskNumber = Integer.parseInt(numberText);
         } catch (NumberFormatException exception) {
-            System.out.println("Please enter a valid task number.");
+            throw new NobException("Please enter a valid task number.");
         }
+
+        if (taskNumber < 1 || taskNumber > taskCount) {
+            throw new NobException("Please enter a task number from 1 to " + taskCount + ".");
+        }
+
+        Task task = tasks[taskNumber - 1];
+        if (isDone) {
+            task.markAsDone();
+            System.out.println("LET'S GOOO! I've marked this task as done:");
+        } else {
+            task.markAsUndone();
+            System.out.println("Okay... I've marked this task as not done yet:");
+        }
+        System.out.println("  " + task);
     }
 }
