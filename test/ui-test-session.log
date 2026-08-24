@@ -16,11 +16,250 @@ ____________________________________________________________
   (•_•)
   ( •_•)>⌐■-■
   (⌐■_■)
-Hii! I'm Nob :)
-What's up?
+
+WASSUP! I'm Nob :)
+How can I help you?
 ____________________________________________________________
 ____________________________________________________________
-Goodbye! Hope to see you soon!
+Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
-All 1 UI test case(s) passed.
+=== Handles invalid task numbers ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+todo borrow book
+mark zebra
+mark 1
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] borrow book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Please enter a valid task number.
+____________________________________________________________
+____________________________________________________________
+LET'S GOOO! I've marked this task as done:
+  [T] borrow book [✓]
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] borrow book [✓]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects malformed deadline syntax without losing valid state ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+deadline return book /bySunday
+deadline finish draft /by Friday
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Check that there is a space before and after '/by'.
+Use: deadline DESCRIPTION /by DATE_OR_TIME
+(eg., deadline return book /by Sunday)
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Friday] finish draft [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D: Friday] finish draft [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects malformed event syntax without losing valid state ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+event project meeting /from Mon 2pm /to 4pm
+event bad /from Mon 2pm
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [E: Mon 2pm to 4pm] project meeting [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Check that there is a space before and after '/from' and '/to'.
+Use: event DESCRIPTION /from START /to END
+(eg., event project meeting /from Mon 2pm /to 4pm)
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[E: Mon 2pm to 4pm] project meeting [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Handles empty todo and later valid todo without corrupting state ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+todo
+todo read book
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Use: todo DESCRIPTION
+(eg., todo borrow book)
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] read book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] read book [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects empty deadline description ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+deadline /by 2
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: deadline DESCRIPTION /by DATE_OR_TIME
+(eg., deadline return book /by Sunday)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects empty event description ===
+Command:
+javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+event /from Mon 2pm /to 4pm
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: event DESCRIPTION /from START /to END
+(eg., event project meeting /from Mon 2pm /to 4pm)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+All 7 UI test case(s) passed.

@@ -145,6 +145,12 @@ public class Nob {
      */
     private static int addDeadline(String command, Task[] tasks, int taskCount) throws NobException {
         String details = command.substring("deadline".length()).trim();
+        if (details.startsWith("/by")) {
+            throw new NobException("Description should not be empty.\n"
+                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                    + "(eg., deadline return book /by Sunday)");
+        }
+
         int byIndex = details.indexOf(" /by ");
         if (byIndex < 1 || byIndex + " /by ".length() == details.length()) {
             if (details.contains("/by")) {
@@ -157,6 +163,12 @@ public class Nob {
         }
 
         String description = details.substring(0, byIndex).trim();
+        if (description.isEmpty()) {
+            throw new NobException("Description should not be empty.\n"
+                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                    + "(eg., deadline return book /by Sunday)");
+        }
+
         String by = details.substring(byIndex + " /by ".length()).trim();
         return addTask(new Deadline(description, by), tasks, taskCount);
     }
@@ -171,6 +183,12 @@ public class Nob {
      */
     private static int addEvent(String command, Task[] tasks, int taskCount) throws NobException {
         String details = command.substring("event".length()).trim();
+        if (details.startsWith("/from") || details.startsWith("/to")) {
+            throw new NobException("Description should not be empty.\n"
+                    + "Use: event DESCRIPTION /from START /to END\n"
+                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+        }
+
         int fromIndex = details.indexOf(" /from ");
         int toIndex = details.indexOf(" /to ");
         if (fromIndex < 1 || toIndex <= fromIndex + " /from ".length()
@@ -185,6 +203,12 @@ public class Nob {
         }
 
         String description = details.substring(0, fromIndex).trim();
+        if (description.isEmpty()) {
+            throw new NobException("Description should not be empty.\n"
+                    + "Use: event DESCRIPTION /from START /to END\n"
+                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+        }
+
         String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
         String to = details.substring(toIndex + " /to ".length()).trim();
         return addTask(new Event(description, from, to), tasks, taskCount);

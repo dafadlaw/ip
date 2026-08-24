@@ -258,3 +258,89 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
+
+## Test Case: Rejects empty deadline description
+
+- **Aim:** Ensure a deadline without a description is rejected with a clear message telling the user the description must not be empty.
+- **Command**
+
+```sh
+javac -d out src/main/java/*.java && java -cp out Nob
+```
+
+- **Input**
+
+```text
+deadline /by 2
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: deadline DESCRIPTION /by DATE_OR_TIME
+(eg., deadline return book /by Sunday)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
+## Test Case: Rejects empty event description
+
+- **Aim:** Ensure an event without a description is rejected with a clear message telling the user the description must not be empty.
+- **Command**
+
+```sh
+javac -d out src/main/java/*.java && java -cp out Nob
+```
+
+- **Input**
+
+```text
+event /from Mon 2pm /to 4pm
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: event DESCRIPTION /from START /to END
+(eg., event project meeting /from Mon 2pm /to 4pm)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
