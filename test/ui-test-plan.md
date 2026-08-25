@@ -344,3 +344,70 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
+
+## Test Case: Deletes a task from the list
+
+- **Aim:** Verify that `delete 2` removes the second task and shifts the remaining tasks left without affecting the rest of the task list.
+- **Command**
+
+```sh
+javac -d out src/main/java/*.java && java -cp out Nob
+```
+
+- **Input**
+
+```text
+todo first task
+todo second task
+todo third task
+delete 2
+list
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] first task [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] second task [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] third task [ ]
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [T] second task [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] first task [ ]
+2.[T] third task [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```

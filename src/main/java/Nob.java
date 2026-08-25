@@ -57,6 +57,8 @@ public class Nob {
                         markTask(command, tasks, taskCount, true);
                     } else if (command.startsWith("unmark ")) {
                         markTask(command, tasks, taskCount, false);
+                    } else if (command.startsWith("delete ")) {
+                        taskCount = deleteTask(command, tasks, taskCount);
                     } else if (command.equals("todo") || command.startsWith("todo ")) {
                         taskCount = addTodo(command, tasks, taskCount);
                     } else if (command.equals("deadline") || command.startsWith("deadline ")) {
@@ -125,7 +127,7 @@ public class Nob {
      */
     private static void printTasks(Task[] tasks, int taskCount) {
         if (taskCount == 0) {
-            System.out.println("Your task list is empty.");
+            System.out.println("Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.");
             return;
         }
 
@@ -266,5 +268,39 @@ public class Nob {
             System.out.println("Okay... I've marked this task as not done yet:");
         }
         System.out.println("  " + task);
+    }
+
+    /**
+     * Deletes a task from the list by its position.
+     *
+     * @param command the delete command entered by the user
+     * @param tasks tasks stored by the user
+     * @param taskCount number of valid tasks in the array
+     * @return the updated number of valid tasks
+     * @throws NobException if the task index is invalid
+     */
+    private static int deleteTask(String command, Task[] tasks, int taskCount) throws NobException {
+        String numberText = command.substring(command.indexOf(' ') + 1).trim();
+        int taskNumber;
+        try {
+            taskNumber = Integer.parseInt(numberText);
+        } catch (NumberFormatException exception) {
+            throw new NobException("Please enter a valid task number.");
+        }
+
+        if (taskNumber < 1 || taskNumber > taskCount) {
+            throw new NobException("Please enter a task number from 1 to " + taskCount + ".");
+        }
+
+        Task removedTask = tasks[taskNumber - 1];
+        for (int index = taskNumber - 1; index < taskCount - 1; index++) {
+            tasks[index] = tasks[index + 1];
+        }
+        tasks[taskCount - 1] = null;
+
+        System.out.println("Noted. I've removed the task:");
+        System.out.println("  " + removedTask);
+        System.out.println("Now you have " + (taskCount - 1) + " tasks left in the list.");
+        return taskCount - 1;
     }
 }
