@@ -1,17 +1,11 @@
 === Exits politely ===
 Command:
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 
 Console input:
 bye
 
 Console output:
-bash: /Users/deron/.bash_profile: Operation not permitted
-The operation couldn’t be completed. Unable to locate a Java Runtime.
-Please visit http://www.java.com for information on installing Java.
-Program exited with status 1.
-RESULT: FAILED — Exits politely
-Expected output:
 ____________________________________________________________
  _   _       _
 | \ | | ___ | |__
@@ -29,8 +23,406 @@ ____________________________________________________________
 ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
-Actual output:
-bash: /Users/deron/.bash_profile: Operation not permitted
-The operation couldn’t be completed. Unable to locate a Java Runtime.
-Please visit http://www.java.com for information on installing Java.
-Test session terminated after the first failure.
+RESULT: PASSED
+=== Saves tasks after each change ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob && cat data/nob.txt
+
+Console input:
+todo read book
+deadline return book /by Friday
+mark 1
+delete 2
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] read book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Friday] return book [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+LET'S GOOO! I've marked this task as done:
+  [T] read book [✓]
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed the task:
+  [D: Friday] return book [ ]
+Now you have 1 tasks left in the list.
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+[T] read book [✓]
+RESULT: PASSED
+=== Loads tasks after restarting ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && printf 'todo read book\nmark 1\nbye\n' | java -cp out Nob >/dev/null && printf 'list\nbye\n' | java -cp out Nob
+
+Console input:
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] read book [✓]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Ignores malformed saved tasks ===
+Command:
+rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out src/main/java/*.java && printf 'list\nbye\n' | java -cp out Nob
+
+Console input:
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Handles invalid task numbers ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+todo borrow book
+mark zebra
+mark 1
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] borrow book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Please enter a valid task number.
+____________________________________________________________
+____________________________________________________________
+LET'S GOOO! I've marked this task as done:
+  [T] borrow book [✓]
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] borrow book [✓]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects malformed deadline syntax without losing valid state ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+deadline return book /bySunday
+deadline finish draft /by Friday
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Check that there is a space before and after '/by'.
+Use: deadline DESCRIPTION /by DATE_OR_TIME
+(eg., deadline return book /by Sunday)
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Friday] finish draft [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D: Friday] finish draft [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects malformed event syntax without losing valid state ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+event project meeting /from Mon 2pm /to 4pm
+event bad /from Mon 2pm
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [E: Mon 2pm to 4pm] project meeting [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Check that there is a space before and after '/from' and '/to'.
+Use: event DESCRIPTION /from START /to END
+(eg., event project meeting /from Mon 2pm /to 4pm)
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[E: Mon 2pm to 4pm] project meeting [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Handles empty todo and later valid todo without corrupting state ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+todo
+todo read book
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Use: todo DESCRIPTION
+(eg., todo borrow book)
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] read book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] read book [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects empty deadline description ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+deadline /by 2
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: deadline DESCRIPTION /by DATE_OR_TIME
+(eg., deadline return book /by Sunday)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Rejects empty event description ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+event /from Mon 2pm /to 4pm
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Description should not be empty.
+Use: event DESCRIPTION /from START /to END
+(eg., event project meeting /from Mon 2pm /to 4pm)
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Deletes a task from the list ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+todo first task
+todo second task
+todo third task
+delete 2
+list
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] first task [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] second task [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] third task [ ]
+Now you have 3 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed the task:
+  [T] second task [ ]
+Now you have 2 tasks left in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] first task [ ]
+2.[T] third task [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+All 11 UI test case(s) passed.
