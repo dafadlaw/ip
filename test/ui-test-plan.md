@@ -10,7 +10,7 @@ Commands are run from the project root. The test runner compares complete output
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -41,13 +41,153 @@ Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
 
+## Test Case: Saves tasks after each change
+
+- **Aim:** Verify that adding, marking, and deleting tasks automatically writes the current task list to disk.
+- **Command**
+
+```sh
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob && cat data/nob.txt
+```
+
+- **Input**
+
+```text
+todo read book
+deadline return book /by Friday
+mark 1
+delete 2
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] read book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Friday] return book [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+LET'S GOOO! I've marked this task as done:
+  [T] read book [✓]
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed the task:
+  [D: Friday] return book [ ]
+Now you have 1 tasks left in the list.
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+[T] read book [✓]
+```
+
+## Test Case: Loads tasks after restarting
+
+- **Aim:** Verify that tasks saved by one chatbot run are loaded by the next run, including completion status.
+- **Command**
+
+```sh
+rm -rf data && javac -d out src/main/java/*.java && printf 'todo read book\nmark 1\nbye\n' | java -cp out Nob >/dev/null && printf 'list\nbye\n' | java -cp out Nob
+```
+
+- **Input**
+
+```text
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T] read book [✓]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
+## Test Case: Ignores malformed saved tasks
+
+- **Aim:** Verify that malformed records in the task file are ignored and do not crash startup or create invalid tasks.
+- **Command**
+
+```sh
+rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out src/main/java/*.java && printf 'list\nbye\n' | java -cp out Nob
+```
+
+- **Input**
+
+```text
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
 ## Test Case: Handles invalid task numbers
 
 - **Aim:** Verify that invalid task index input raises a clear error message instead of crashing or silently failing.
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -104,7 +244,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -158,7 +298,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -212,7 +352,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -265,7 +405,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -308,7 +448,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -351,7 +491,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
 ```
 
 - **Input**
@@ -398,9 +538,9 @@ Alrighty. I've added this task:
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Noted. I've removed the task:
   [T] second task [ ]
-Now you have 2 tasks in the list.
+Now you have 2 tasks left in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:

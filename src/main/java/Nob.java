@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -7,6 +11,9 @@ public class Nob {
     /** The maximum number of tasks Nob can keep during one run. */
     private static final int MAX_TASKS = 100;
 
+    /** The file used to store the current task list. */
+    private static final Path DATA_FILE = Path.of("data", "nob.txt");
+
     /**
      * Reads and responds to commands until the user enters {@code bye}.
      *
@@ -14,7 +21,7 @@ public class Nob {
      */
     public static void main(String[] args) {
         Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        int taskCount = loadTasks(tasks);
         String divider = "____________________________________________________________";
         String banner = """
                  _   _       _
@@ -79,6 +86,100 @@ public class Nob {
                 }
                 System.out.println(divider);
             }
+        }
+    }
+
+    /** Loads tasks saved by a previous run of Nob. */
+    private static int loadTasks(Task[] tasks) {
+        if (!Files.exists(DATA_FILE)) {
+            return 0;
+        }
+
+        int taskCount = 0;
+        try {
+            List<String> savedTasks = Files.readAllLines(DATA_FILE);
+            for (String savedTask : savedTasks) {
+                if (taskCount == MAX_TASKS) {
+                    break;
+                }
+
+                Task task = parseTask(savedTask);
+                if (task != null) {
+                    tasks[taskCount] = task;
+                    taskCount++;
+                }
+            }
+        } catch (IOException exception) {
+            System.out.println("I couldn't load the saved tasks, so I'm starting with an empty list.");
+            return 0;
+        }
+        return taskCount;
+    }
+
+    /** Parses one task line written by {@link #saveTasks(Task[], int)}. */
+    private static Task parseTask(String savedTask) {
+        if (savedTask.length() < 7 || !(savedTask.endsWith("[ ]") || savedTask.endsWith("[✓]"))) {
+            return null;
+        }
+
+        boolean isDone = savedTask.endsWith("[✓]");
+        String taskText = savedTask.substring(0, savedTask.length() - 4).trim();
+        if (taskText.length() < 4) {
+            return null;
+        }
+        Task task;
+        if (taskText.startsWith("[T] ")) {
+            String description = taskText.substring(4).trim();
+            if (description.isEmpty()) {
+                return null;
+            }
+            task = new Todo(description);
+        } else if (taskText.startsWith("[D: ")) {
+            int detailsEnd = taskText.lastIndexOf("] ");
+            if (detailsEnd < 5) {
+                return null;
+            }
+            String by = taskText.substring(4, detailsEnd);
+            String description = taskText.substring(detailsEnd + 2);
+            if (by.trim().isEmpty() || description.trim().isEmpty()) {
+                return null;
+            }
+            task = new Deadline(description, by);
+        } else if (taskText.startsWith("[E: ")) {
+            int detailsEnd = taskText.lastIndexOf("] ");
+            int separator = taskText.lastIndexOf(" to ", detailsEnd);
+            if (detailsEnd < 5 || separator < 5) {
+                return null;
+            }
+            String from = taskText.substring(4, separator);
+            String to = taskText.substring(separator + 4, detailsEnd);
+            String description = taskText.substring(detailsEnd + 2);
+            if (from.trim().isEmpty() || to.trim().isEmpty() || description.trim().isEmpty()) {
+                return null;
+            }
+            task = new Event(description, from, to);
+        } else {
+            return null;
+        }
+
+        if (isDone) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    /** Writes the current task list to disk. */
+    private static void saveTasks(Task[] tasks, int taskCount) {
+        StringBuilder fileContents = new StringBuilder();
+        for (int index = 0; index < taskCount; index++) {
+            fileContents.append(tasks[index]).append(System.lineSeparator());
+        }
+
+        try {
+            Files.createDirectories(DATA_FILE.getParent());
+            Files.writeString(DATA_FILE, fileContents.toString());
+        } catch (IOException exception) {
+            System.out.println("I couldn't save the task list to disk. Your changes are kept for this run.");
         }
     }
 
@@ -172,6 +273,10 @@ public class Nob {
         }
 
         String by = details.substring(byIndex + " /by ".length()).trim();
+        if (by.isEmpty()) {
+            throw new NobException("Deadline time should not be empty.\n"
+                + "Use: deadline DESCRIPTION /by DATE_OR_TIME");
+        }
         return addTask(new Deadline(description, by), tasks, taskCount);
     }
 
@@ -213,6 +318,10 @@ public class Nob {
 
         String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
         String to = details.substring(toIndex + " /to ".length()).trim();
+        if (from.isEmpty() || to.isEmpty()) {
+            throw new NobException("Event times should not be empty.\n"
+                + "Use: event DESCRIPTION /from START /to END");
+        }
         return addTask(new Event(description, from, to), tasks, taskCount);
     }
 
@@ -231,6 +340,7 @@ public class Nob {
         }
 
         tasks[taskCount] = task;
+        saveTasks(tasks, taskCount + 1);
         System.out.println("Alrighty. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + (taskCount + 1) + " tasks in the list.");
@@ -267,6 +377,7 @@ public class Nob {
             task.markAsUndone();
             System.out.println("Okay... I've marked this task as not done yet:");
         }
+        saveTasks(tasks, taskCount);
         System.out.println("  " + task);
     }
 
@@ -297,6 +408,7 @@ public class Nob {
             tasks[index] = tasks[index + 1];
         }
         tasks[taskCount - 1] = null;
+        saveTasks(tasks, taskCount - 1);
 
         System.out.println("Noted. I've removed the task:");
         System.out.println("  " + removedTask);
