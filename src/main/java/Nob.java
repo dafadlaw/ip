@@ -1,8 +1,10 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Starts the Nob chatbot application.
@@ -14,6 +16,9 @@ public class Nob {
     /** The file used to store the current task list. */
     private static final Path DATA_FILE = Path.of("data", "nob.txt");
 
+    /** The divider used around each app response block. */
+    private static final String DIVIDER = "____________________________________________________________";
+
     /**
      * Reads and responds to commands until the user enters {@code bye}.
      *
@@ -22,7 +27,6 @@ public class Nob {
     public static void main(String[] args) {
         Task[] tasks = new Task[MAX_TASKS];
         int taskCount = loadTasks(tasks);
-        String divider = "____________________________________________________________";
         String banner = """
                  _   _       _
                 | \\ | | ___ | |__
@@ -41,20 +45,24 @@ public class Nob {
                 """;
         String farewell = "Goodbye! Hope to see you soon mate!";
 
-        System.out.println(divider);
+        System.out.println(DIVIDER);
         System.out.print(banner);
         System.out.print(greeting);
-        System.out.println(divider);
+        System.out.println(DIVIDER);
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (scanner.hasNextLine()) {
-                String command = scanner.nextLine();
-                System.out.println(divider);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+            while (true) {
+                String command = reader.readLine();
+                if (command == null) {
+                    command = "";
+                }
+                System.out.println();
+                System.out.println(DIVIDER);
 
                 try {
                     if (command.equals("bye")) {
                         System.out.println(farewell);
-                        System.out.println(divider);
+                        System.out.println(DIVIDER);
                         break;
                     }
 
@@ -84,8 +92,12 @@ public class Nob {
                 } catch (NobException exception) {
                     System.out.println(exception.getMessage());
                 }
-                System.out.println(divider);
+                System.out.println(DIVIDER);
+                System.out.println();
             }
+        } catch (IOException exception) {
+            System.out.println("I couldn't read your input.");
+            exception.printStackTrace();
         }
     }
 

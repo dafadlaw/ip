@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -10,6 +11,8 @@ import java.util.Optional;
  * Utilities for parsing and formatting date and time strings used by tasks.
  */
 public final class DateTimeUtil {
+    private static final DateTimeFormatter DATE_ONLY_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy",
+            Locale.ENGLISH);
     private static final DateTimeFormatter DISPLAY_FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("MMM dd yyyy")
             .appendLiteral(", ")
@@ -21,9 +24,15 @@ public final class DateTimeUtil {
             DateTimeFormatter.ofPattern("d/M/uuuu HH:mm", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("d/M/uuuu h:mma", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("d/M/uuuu hha", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("d/M/uuuu", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("M/d/uuuu HHmm", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("M/d/uuuu", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd h:mma", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("MMM d yyyy, h:mma", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma", Locale.ENGLISH),
@@ -32,7 +41,10 @@ public final class DateTimeUtil {
             DateTimeFormatter.ofPattern("d MMM yyyy, h:mma", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("dd MMM yyyy, h:mma", Locale.ENGLISH),
             DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH),
-            DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH)
+            DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("MMM d yyyy h:mma", Locale.ENGLISH)
     };
 
     private DateTimeUtil() {
@@ -89,7 +101,13 @@ public final class DateTimeUtil {
      * @return a readable string for display
      */
     public static String formatDisplay(LocalDateTime value) {
-        return value == null ? "" : value.format(DISPLAY_FORMATTER);
+        if (value == null) {
+            return "";
+        }
+        if (value.toLocalTime().equals(LocalTime.MIDNIGHT)) {
+            return value.format(DATE_ONLY_FORMATTER);
+        }
+        return value.format(DISPLAY_FORMATTER);
     }
 
     /**
