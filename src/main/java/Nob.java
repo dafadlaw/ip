@@ -56,7 +56,8 @@ public class Nob {
                     } else if (command.equals("clear")) {
                         clearTasks(tasks, storage, ui);
                     } else if (command.equals("list")) {
-                        ui.showTaskList(tasks);
+                        Command listCommand = new ListCommand();
+                        listCommand.execute(tasks, ui, storage);
                     } else if (command.startsWith("mark ")) {
                         markTask(command, tasks, true, storage, ui);
                     } else if (command.startsWith("unmark ")) {
