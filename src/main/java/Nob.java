@@ -16,39 +16,16 @@ public class Nob {
     /** The file used to store the current task list. */
     private static final Path DATA_FILE = Path.of("data", "nob.txt");
 
-    /** The divider used around each app response block. */
-    private static final String DIVIDER = "____________________________________________________________";
-
     /**
      * Reads and responds to commands until the user enters {@code bye}.
      *
      * @param args command-line arguments, which this application does not use
      */
     public static void main(String[] args) {
+        Ui ui = new Ui();
         Task[] tasks = new Task[MAX_TASKS];
         int taskCount = loadTasks(tasks);
-        String banner = """
-                 _   _       _
-                | \\ | | ___ | |__
-                |  \\| |/ _ \\| '_ \\
-                | |\\  | (_) | |_) |
-                |_| \\_|\\___/|_.__/
-
-                  (•_•)
-                  ( •_•)>⌐■-■
-                  (⌐■_■)
-
-                """;
-        String greeting = """
-                WASSUP! I'm Nob :)
-                How can I help you?
-                """;
-        String farewell = "Goodbye! Hope to see you soon mate!";
-
-        System.out.println(DIVIDER);
-        System.out.print(banner);
-        System.out.print(greeting);
-        System.out.println(DIVIDER);
+        ui.showWelcome();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
             while (true) {
@@ -57,17 +34,17 @@ public class Nob {
                     command = "";
                 }
                 System.out.println();
-                System.out.println(DIVIDER);
+                ui.showDivider();
 
                 try {
                     if (command.equals("bye")) {
-                        System.out.println(farewell);
-                        System.out.println(DIVIDER);
+                        ui.showGoodbye();
+                        ui.showDivider();
                         break;
                     }
 
                     if (command.equals("help")) {
-                        printHelp();
+                        ui.showHelp();
                     } else if (command.equals("clear")) {
                         taskCount = clearTasks(tasks, taskCount);
                     } else if (command.equals("list")) {
@@ -85,18 +62,18 @@ public class Nob {
                     } else if (command.equals("event") || command.startsWith("event ")) {
                         taskCount = addEvent(command, tasks, taskCount);
                     } else if (command.startsWith("todo")) {
-                        showMissingSpaceHint("todo", command);
+                        ui.showMissingSpaceHint("todo", command);
                     } else if (command.startsWith("deadline")) {
-                        showMissingSpaceHint("deadline", command);
+                        ui.showMissingSpaceHint("deadline", command);
                     } else if (command.startsWith("event")) {
-                        showMissingSpaceHint("event", command);
+                        ui.showMissingSpaceHint("event", command);
                     } else {
-                        showUnknownCommandHint();
+                        ui.showUnknownCommandHint();
                     }
                 } catch (NobException exception) {
                     System.out.println(exception.getMessage());
                 }
-                System.out.println(DIVIDER);
+                ui.showDivider();
                 System.out.println();
             }
         } catch (IOException exception) {
@@ -214,40 +191,6 @@ public class Nob {
         }
 
         return addTask(new Todo(description), tasks, taskCount);
-    }
-
-    /**
-     * Explains that a command name must be separated from its description by a space.
-     *
-     * @param commandName the expected command name
-     * @param command the command entered by the user
-     */
-    private static void showMissingSpaceHint(String commandName, String command) {
-        String description = command.substring(commandName.length()).trim();
-        System.out.println("It looks like you are missing a space after '" + commandName + "'.");
-        System.out.println("Did you mean: " + commandName + " " + description);
-    }
-
-    /** Displays the task commands available in Nob when a command is unrecognised. */
-    private static void showUnknownCommandHint() {
-        System.out.println("That isn't any of the commands I know. Did you mean one of these?");
-        System.out.println("  todo DESCRIPTION");
-        System.out.println("  deadline DESCRIPTION /by DATE_OR_TIME");
-        System.out.println("  event DESCRIPTION /from START /to END");
-    }
-
-    /** Prints a handy list of all available Nob commands. */
-    private static void printHelp() {
-        System.out.println("Here are the commands you can use:");
-        System.out.println("  list");
-        System.out.println("  todo DESCRIPTION");
-        System.out.println("  deadline DESCRIPTION /by DATE_OR_TIME");
-        System.out.println("  event DESCRIPTION /from START /to END");
-        System.out.println("  mark TASK_NUMBER");
-        System.out.println("  unmark TASK_NUMBER");
-        System.out.println("  delete TASK_NUMBER");
-        System.out.println("  clear");
-        System.out.println("  bye");
     }
 
     /** Clears every task in the current list and writes the empty list to disk. */

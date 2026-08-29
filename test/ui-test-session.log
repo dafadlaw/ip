@@ -508,6 +508,48 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
+=== Shows available commands with help ===
+Command:
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+
+Console input:
+help
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the commands you can use:
+  list
+  todo DESCRIPTION
+  deadline DESCRIPTION /by DATE_OR_TIME
+  event DESCRIPTION /from START /to END
+  mark TASK_NUMBER
+  unmark TASK_NUMBER
+  delete TASK_NUMBER
+  clear
+  bye
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
 === Deletes a task from the list ===
 Command:
 rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
@@ -575,4 +617,4 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
-All 13 UI test case(s) passed.
+All 14 UI test case(s) passed.
