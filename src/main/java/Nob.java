@@ -66,7 +66,11 @@ public class Nob {
                         break;
                     }
 
-                    if (command.equals("list")) {
+                    if (command.equals("help")) {
+                        printHelp();
+                    } else if (command.equals("clear")) {
+                        taskCount = clearTasks(tasks, taskCount);
+                    } else if (command.equals("list")) {
                         printTasks(tasks, taskCount);
                     } else if (command.startsWith("mark ")) {
                         markTask(command, tasks, taskCount, true);
@@ -230,6 +234,30 @@ public class Nob {
         System.out.println("  todo DESCRIPTION");
         System.out.println("  deadline DESCRIPTION /by DATE_OR_TIME");
         System.out.println("  event DESCRIPTION /from START /to END");
+    }
+
+    /** Prints a handy list of all available Nob commands. */
+    private static void printHelp() {
+        System.out.println("Here are the commands you can use:");
+        System.out.println("  list");
+        System.out.println("  todo DESCRIPTION");
+        System.out.println("  deadline DESCRIPTION /by DATE_OR_TIME");
+        System.out.println("  event DESCRIPTION /from START /to END");
+        System.out.println("  mark TASK_NUMBER");
+        System.out.println("  unmark TASK_NUMBER");
+        System.out.println("  delete TASK_NUMBER");
+        System.out.println("  clear");
+        System.out.println("  bye");
+    }
+
+    /** Clears every task in the current list and writes the empty list to disk. */
+    private static int clearTasks(Task[] tasks, int taskCount) {
+        for (int index = 0; index < taskCount; index++) {
+            tasks[index] = null;
+        }
+        saveTasks(tasks, 0);
+        System.out.println("Noted. I've cleared the entire task list.");
+        return 0;
     }
 
     /**

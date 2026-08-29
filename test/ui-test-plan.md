@@ -646,6 +646,59 @@ Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
 
+## Test Case: Shows available commands with help
+
+- **Aim:** Verify that the `help` command prints all available Nob commands, including task management actions and syntax.
+- **Command**
+
+```sh
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+```
+
+- **Input**
+
+```text
+help
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Here are the commands you can use:
+  list
+  todo DESCRIPTION
+  deadline DESCRIPTION /by DATE_OR_TIME
+  event DESCRIPTION /from START /to END
+  mark TASK_NUMBER
+  unmark TASK_NUMBER
+  delete TASK_NUMBER
+  clear
+  bye
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
 ## Test Case: Deletes a task from the list
 
 - **Aim:** Verify that `delete 2` removes the second task and shifts the remaining tasks left without affecting the rest of the task list.
