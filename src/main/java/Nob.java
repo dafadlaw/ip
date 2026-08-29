@@ -62,11 +62,11 @@ public class Nob {
                     } else if (command.startsWith("delete ")) {
                         deleteTask(command, tasks, storage);
                     } else if (command.equals("todo") || command.startsWith("todo ")) {
-                        addTodo(command, tasks, storage);
+                        addTask(Parser.parseTodo(command), tasks, storage);
                     } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                        addDeadline(command, tasks, storage);
+                        addTask(Parser.parseDeadline(command), tasks, storage);
                     } else if (command.equals("event") || command.startsWith("event ")) {
-                        addEvent(command, tasks, storage);
+                        addTask(Parser.parseEvent(command), tasks, storage);
                     } else if (command.startsWith("todo")) {
                         ui.showMissingSpaceHint("todo", command);
                     } else if (command.startsWith("deadline")) {
@@ -86,22 +86,6 @@ public class Nob {
             System.out.println("I couldn't read your input.");
             exception.printStackTrace();
         }
-    }
-
-    /**
-     * Adds a to-do parsed from a {@code todo DESCRIPTION} command.
-     *
-     * @param command the command entered by the user
-     * @param tasks the user's task list
-     * @param storage persistent task storage
-     */
-    private static void addTodo(String command, TaskList tasks, Storage storage) throws NobException {
-        String description = command.substring("todo".length()).trim();
-        if (description.isEmpty()) {
-            throw new NobException("Use: todo DESCRIPTION\n(eg., todo borrow book)");
-        }
-
-        addTask(new Todo(description), tasks, storage);
     }
 
     /** Clears every task in the current list and writes the empty list to disk. */
@@ -126,93 +110,6 @@ public class Nob {
         for (int index = 1; index <= tasks.getTaskCount(); index++) {
             System.out.println(index + "." + tasks.getTask(index));
         }
-    }
-
-    /**
-     * Adds a deadline parsed from a {@code deadline DESCRIPTION /by TIME} command.
-     *
-     * @param command the command entered by the user
-     * @param tasks the user's task list
-     * @param storage persistent task storage
-     */
-    private static void addDeadline(String command, TaskList tasks, Storage storage)
-            throws NobException {
-        String details = command.substring("deadline".length()).trim();
-        if (details.startsWith("/by")) {
-            throw new NobException("Description should not be empty.\n"
-                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
-        }
-
-        int byIndex = details.indexOf(" /by ");
-        if (byIndex < 1 || byIndex + " /by ".length() == details.length()) {
-            if (details.contains("/by")) {
-                throw new NobException("Check that there is a space before and after '/by'.\n"
-                        + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                        + "(eg., deadline return book /by Sunday)");
-            }
-            throw new NobException("Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
-        }
-
-        String description = details.substring(0, byIndex).trim();
-        if (description.isEmpty()) {
-            throw new NobException("Description should not be empty.\n"
-                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
-        }
-
-        String by = details.substring(byIndex + " /by ".length()).trim();
-        if (by.isEmpty()) {
-            throw new NobException("Deadline time should not be empty.\n"
-                + "Use: deadline DESCRIPTION /by DATE_OR_TIME");
-        }
-        addTask(new Deadline(description, by), tasks, storage);
-    }
-
-    /**
-     * Adds an event parsed from an {@code event DESCRIPTION /from START /to END} command.
-     *
-     * @param command the command entered by the user
-     * @param tasks the user's task list
-     * @param storage persistent task storage
-     */
-    private static void addEvent(String command, TaskList tasks, Storage storage)
-            throws NobException {
-        String details = command.substring("event".length()).trim();
-        if (details.startsWith("/from") || details.startsWith("/to")) {
-            throw new NobException("Description should not be empty.\n"
-                    + "Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
-        }
-
-        int fromIndex = details.indexOf(" /from ");
-        int toIndex = details.indexOf(" /to ");
-        if (fromIndex < 1 || toIndex <= fromIndex + " /from ".length()
-                || toIndex + " /to ".length() == details.length()) {
-            if (details.contains("/from") || details.contains("/to")) {
-                throw new NobException("Check that there is a space before and after '/from' and '/to'.\n"
-                        + "Use: event DESCRIPTION /from START /to END\n"
-                        + "(eg., event project meeting /from Mon 2pm /to 4pm)");
-            }
-            throw new NobException("Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
-        }
-
-        String description = details.substring(0, fromIndex).trim();
-        if (description.isEmpty()) {
-            throw new NobException("Description should not be empty.\n"
-                    + "Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
-        }
-
-        String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
-        String to = details.substring(toIndex + " /to ".length()).trim();
-        if (from.isEmpty() || to.isEmpty()) {
-            throw new NobException("Event times should not be empty.\n"
-                + "Use: event DESCRIPTION /from START /to END");
-        }
-        addTask(new Event(description, from, to), tasks, storage);
     }
 
     /**
@@ -244,15 +141,7 @@ public class Nob {
      */
     private static void markTask(String command, TaskList tasks, boolean isDone, Storage storage)
             throws NobException {
-        String numberText = command.substring(command.indexOf(' ') + 1).trim();
-        int taskNumber;
-        try {
-            taskNumber = Integer.parseInt(numberText);
-        } catch (NumberFormatException exception) {
-            throw new NobException("Please enter a valid task number.");
-        }
-
-        Task task = tasks.markTask(taskNumber, isDone);
+        Task task = tasks.markTask(Parser.parseTaskNumber(command), isDone);
         if (isDone) {
             System.out.println("LET'S GOOO! I've marked this task as done:");
         } else {
@@ -272,15 +161,7 @@ public class Nob {
      */
     private static void deleteTask(String command, TaskList tasks, Storage storage)
             throws NobException {
-        String numberText = command.substring(command.indexOf(' ') + 1).trim();
-        int taskNumber;
-        try {
-            taskNumber = Integer.parseInt(numberText);
-        } catch (NumberFormatException exception) {
-            throw new NobException("Please enter a valid task number.");
-        }
-
-        Task removedTask = tasks.deleteTask(taskNumber);
+        Task removedTask = tasks.deleteTask(Parser.parseTaskNumber(command));
         saveTasks(storage, tasks);
 
         System.out.println("Noted. I've removed the task:");
