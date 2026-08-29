@@ -22,14 +22,15 @@ public class Nob {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Storage storage = new Storage(DATA_FILE);
-        Task[] tasks = new Task[MAX_TASKS];
+        Task[] loadedTasks = new Task[MAX_TASKS];
         int taskCount;
         try {
-            taskCount = storage.loadTasks(tasks);
+            taskCount = storage.loadTasks(loadedTasks);
         } catch (NobException exception) {
             ui.showLoadingError();
             taskCount = 0;
         }
+        TaskList tasks = new TaskList(loadedTasks, taskCount);
         ui.showWelcome();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
@@ -51,21 +52,21 @@ public class Nob {
                     if (command.equals("help")) {
                         ui.showHelp();
                     } else if (command.equals("clear")) {
-                        taskCount = clearTasks(tasks, taskCount, storage);
+                        clearTasks(tasks, storage);
                     } else if (command.equals("list")) {
-                        printTasks(tasks, taskCount);
+                        printTasks(tasks);
                     } else if (command.startsWith("mark ")) {
-                        markTask(command, tasks, taskCount, true, storage);
+                        markTask(command, tasks, true, storage);
                     } else if (command.startsWith("unmark ")) {
-                        markTask(command, tasks, taskCount, false, storage);
+                        markTask(command, tasks, false, storage);
                     } else if (command.startsWith("delete ")) {
-                        taskCount = deleteTask(command, tasks, taskCount, storage);
+                        deleteTask(command, tasks, storage);
                     } else if (command.equals("todo") || command.startsWith("todo ")) {
-                        taskCount = addTodo(command, tasks, taskCount, storage);
+                        addTodo(command, tasks, storage);
                     } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                        taskCount = addDeadline(command, tasks, taskCount, storage);
+                        addDeadline(command, tasks, storage);
                     } else if (command.equals("event") || command.startsWith("event ")) {
-                        taskCount = addEvent(command, tasks, taskCount, storage);
+                        addEvent(command, tasks, storage);
                     } else if (command.startsWith("todo")) {
                         ui.showMissingSpaceHint("todo", command);
                     } else if (command.startsWith("deadline")) {
@@ -91,44 +92,39 @@ public class Nob {
      * Adds a to-do parsed from a {@code todo DESCRIPTION} command.
      *
      * @param command the command entered by the user
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
-     * @return the updated number of valid tasks
+     * @param tasks the user's task list
+     * @param storage persistent task storage
      */
-    private static int addTodo(String command, Task[] tasks, int taskCount, Storage storage) throws NobException {
+    private static void addTodo(String command, TaskList tasks, Storage storage) throws NobException {
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new NobException("Use: todo DESCRIPTION\n(eg., todo borrow book)");
         }
 
-        return addTask(new Todo(description), tasks, taskCount, storage);
+        addTask(new Todo(description), tasks, storage);
     }
 
     /** Clears every task in the current list and writes the empty list to disk. */
-    private static int clearTasks(Task[] tasks, int taskCount, Storage storage) {
-        for (int index = 0; index < taskCount; index++) {
-            tasks[index] = null;
-        }
-        saveTasks(storage, tasks, 0);
+    private static void clearTasks(TaskList tasks, Storage storage) {
+        tasks.clear();
+        saveTasks(storage, tasks);
         System.out.println("Noted. I've cleared the entire task list.");
-        return 0;
     }
 
     /**
      * Displays every task currently stored in the task list.
      *
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
+     * @param tasks the user's task list
      */
-    private static void printTasks(Task[] tasks, int taskCount) {
-        if (taskCount == 0) {
+    private static void printTasks(TaskList tasks) throws NobException {
+        if (tasks.getTaskCount() == 0) {
             System.out.println("Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.");
             return;
         }
 
         System.out.println("Here are the tasks in your list:");
-        for (int index = 0; index < taskCount; index++) {
-            System.out.println((index + 1) + "." + tasks[index]);
+        for (int index = 1; index <= tasks.getTaskCount(); index++) {
+            System.out.println(index + "." + tasks.getTask(index));
         }
     }
 
@@ -136,11 +132,10 @@ public class Nob {
      * Adds a deadline parsed from a {@code deadline DESCRIPTION /by TIME} command.
      *
      * @param command the command entered by the user
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
-     * @return the updated number of valid tasks
+     * @param tasks the user's task list
+     * @param storage persistent task storage
      */
-    private static int addDeadline(String command, Task[] tasks, int taskCount, Storage storage)
+    private static void addDeadline(String command, TaskList tasks, Storage storage)
             throws NobException {
         String details = command.substring("deadline".length()).trim();
         if (details.startsWith("/by")) {
@@ -172,18 +167,17 @@ public class Nob {
             throw new NobException("Deadline time should not be empty.\n"
                 + "Use: deadline DESCRIPTION /by DATE_OR_TIME");
         }
-        return addTask(new Deadline(description, by), tasks, taskCount, storage);
+        addTask(new Deadline(description, by), tasks, storage);
     }
 
     /**
      * Adds an event parsed from an {@code event DESCRIPTION /from START /to END} command.
      *
      * @param command the command entered by the user
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
-     * @return the updated number of valid tasks
+     * @param tasks the user's task list
+     * @param storage persistent task storage
      */
-    private static int addEvent(String command, Task[] tasks, int taskCount, Storage storage)
+    private static void addEvent(String command, TaskList tasks, Storage storage)
             throws NobException {
         String details = command.substring("event".length()).trim();
         if (details.startsWith("/from") || details.startsWith("/to")) {
@@ -218,40 +212,37 @@ public class Nob {
             throw new NobException("Event times should not be empty.\n"
                 + "Use: event DESCRIPTION /from START /to END");
         }
-        return addTask(new Event(description, from, to), tasks, taskCount, storage);
+        addTask(new Event(description, from, to), tasks, storage);
     }
 
     /**
      * Stores a task and reports the result to the user when storage is available.
      *
      * @param task the task to store
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
-     * @return the updated number of valid tasks
+     * @param tasks the user's task list
+     * @param storage persistent task storage
      */
-    private static int addTask(Task task, Task[] tasks, int taskCount, Storage storage) {
-        if (taskCount == MAX_TASKS) {
+    private static void addTask(Task task, TaskList tasks, Storage storage) {
+        if (!tasks.addTask(task)) {
             System.out.println("I can only store up to " + MAX_TASKS + " tasks.");
-            return taskCount;
+            return;
         }
 
-        tasks[taskCount] = task;
-        saveTasks(storage, tasks, taskCount + 1);
+        saveTasks(storage, tasks);
         System.out.println("Alrighty. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + (taskCount + 1) + " tasks in the list.");
-        return taskCount + 1;
+        System.out.println("Now you have " + tasks.getTaskCount() + " tasks in the list.");
     }
 
     /**
      * Marks a task as complete or incomplete using its position in the list.
      *
      * @param command the mark or unmark command entered by the user
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
+     * @param tasks the user's task list
      * @param isDone whether the task should be marked as completed
+     * @param storage persistent task storage
      */
-    private static void markTask(String command, Task[] tasks, int taskCount, boolean isDone, Storage storage)
+    private static void markTask(String command, TaskList tasks, boolean isDone, Storage storage)
             throws NobException {
         String numberText = command.substring(command.indexOf(' ') + 1).trim();
         int taskNumber;
@@ -261,19 +252,13 @@ public class Nob {
             throw new NobException("Please enter a valid task number.");
         }
 
-        if (taskNumber < 1 || taskNumber > taskCount) {
-            throw new NobException("Please enter a task number from 1 to " + taskCount + ".");
-        }
-
-        Task task = tasks[taskNumber - 1];
+        Task task = tasks.markTask(taskNumber, isDone);
         if (isDone) {
-            task.markAsDone();
             System.out.println("LET'S GOOO! I've marked this task as done:");
         } else {
-            task.markAsUndone();
             System.out.println("Okay... I've marked this task as not done yet:");
         }
-        saveTasks(storage, tasks, taskCount);
+        saveTasks(storage, tasks);
         System.out.println("  " + task);
     }
 
@@ -281,12 +266,11 @@ public class Nob {
      * Deletes a task from the list by its position.
      *
      * @param command the delete command entered by the user
-     * @param tasks tasks stored by the user
-     * @param taskCount number of valid tasks in the array
-     * @return the updated number of valid tasks
+     * @param tasks the user's task list
+     * @param storage persistent task storage
      * @throws NobException if the task index is invalid
      */
-    private static int deleteTask(String command, Task[] tasks, int taskCount, Storage storage)
+    private static void deleteTask(String command, TaskList tasks, Storage storage)
             throws NobException {
         String numberText = command.substring(command.indexOf(' ') + 1).trim();
         int taskNumber;
@@ -296,26 +280,17 @@ public class Nob {
             throw new NobException("Please enter a valid task number.");
         }
 
-        if (taskNumber < 1 || taskNumber > taskCount) {
-            throw new NobException("Please enter a task number from 1 to " + taskCount + ".");
-        }
-
-        Task removedTask = tasks[taskNumber - 1];
-        for (int index = taskNumber - 1; index < taskCount - 1; index++) {
-            tasks[index] = tasks[index + 1];
-        }
-        tasks[taskCount - 1] = null;
-        saveTasks(storage, tasks, taskCount - 1);
+        Task removedTask = tasks.deleteTask(taskNumber);
+        saveTasks(storage, tasks);
 
         System.out.println("Noted. I've removed the task:");
         System.out.println("  " + removedTask);
-        System.out.println("Now you have " + (taskCount - 1) + " tasks left in the list.");
-        return taskCount - 1;
+        System.out.println("Now you have " + tasks.getTaskCount() + " tasks left in the list.");
     }
 
     /** Saves tasks and reports if the file could not be updated. */
-    private static void saveTasks(Storage storage, Task[] tasks, int taskCount) {
-        if (!storage.saveTasks(tasks, taskCount)) {
+    private static void saveTasks(Storage storage, TaskList tasks) {
+        if (!storage.saveTasks(tasks.getTasks(), tasks.getTaskCount())) {
             System.out.println("I couldn't save the task list to disk. Your changes are kept for this run.");
         }
     }
