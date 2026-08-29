@@ -1,9 +1,14 @@
+import java.time.LocalDateTime;
+
 /**
  * Represents a task that should be completed by a specified time.
  */
 public class Deadline extends Task {
-    /** The deadline text supplied by the user. */
-    private final String by;
+    /** The parsed deadline date and time supplied by the user, when it can be parsed. */
+    private final LocalDateTime byDateTime;
+
+    /** Original deadline text used for display fallback when the value is not a recognised date/time. */
+    private final String byText;
 
     /**
      * Creates an incomplete deadline task.
@@ -13,7 +18,20 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
-        this.by = by;
+        this.byDateTime = DateTimeUtil.parseDateTime(by).orElse(null);
+        this.byText = by == null ? "" : by.trim();
+    }
+
+    /**
+     * Creates an incomplete deadline task from an already parsed date-time.
+     *
+     * @param description text describing the task
+     * @param by the parsed deadline value
+     */
+    public Deadline(String description, LocalDateTime by) {
+        super(description);
+        this.byDateTime = by;
+        this.byText = DateTimeUtil.formatDisplay(by);
     }
 
     /**
@@ -23,6 +41,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D: " + by + "] " + super.toString();
+        return "[D: " + (byDateTime == null ? byText : DateTimeUtil.formatDisplay(byDateTime)) + "] " + super.toString();
     }
 }

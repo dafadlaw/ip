@@ -1,12 +1,20 @@
+import java.time.LocalDateTime;
+
 /**
  * Represents a task that takes place between a start and end time.
  */
 public class Event extends Task {
-    /** The start date or time supplied by the user. */
-    private final String from;
+    /** The parsed start date or time supplied by the user, when it can be parsed. */
+    private final LocalDateTime fromDateTime;
 
-    /** The end date or time supplied by the user. */
-    private final String to;
+    /** The parsed end date or time supplied by the user, when it can be parsed. */
+    private final LocalDateTime toDateTime;
+
+    /** Original event start text used for display fallback when the value is not a recognised date/time. */
+    private final String fromText;
+
+    /** Original event end text used for display fallback when the value is not a recognised date/time. */
+    private final String toText;
 
     /**
      * Creates an incomplete event task.
@@ -17,8 +25,25 @@ public class Event extends Task {
      */
     public Event(String description, String from, String to) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.fromDateTime = DateTimeUtil.parseDateTime(from).orElse(null);
+        this.toDateTime = DateTimeUtil.parseDateTime(to).orElse(null);
+        this.fromText = from == null ? "" : from.trim();
+        this.toText = to == null ? "" : to.trim();
+    }
+
+    /**
+     * Creates an incomplete event task from already parsed date-times.
+     *
+     * @param description text describing the event
+     * @param from the event start date or time
+     * @param to the event end date or time
+     */
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
+        super(description);
+        this.fromDateTime = from;
+        this.toDateTime = to;
+        this.fromText = DateTimeUtil.formatDisplay(from);
+        this.toText = DateTimeUtil.formatDisplay(to);
     }
 
     /**
@@ -28,6 +53,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E: " + from + " to " + to + "] " + super.toString();
+        String fromValue = fromDateTime == null ? fromText : DateTimeUtil.formatDisplay(fromDateTime);
+        String toValue = toDateTime == null ? toText : DateTimeUtil.formatDisplay(toDateTime);
+        return "[E: " + fromValue + " to " + toValue + "] " + super.toString();
     }
 }
