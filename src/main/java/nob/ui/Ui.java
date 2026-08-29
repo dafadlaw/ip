@@ -1,3 +1,9 @@
+package nob.ui;
+
+import nob.exception.NobException;
+import nob.task.Task;
+import nob.task.TaskList;
+
 /**
  * Handles messages shown to the user in the console.
  */

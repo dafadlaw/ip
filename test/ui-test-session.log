@@ -1,6 +1,6 @@
 === Exits politely ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 bye
@@ -27,7 +27,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Saves tasks after each change ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob && cat data/nob.txt
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob && cat data/nob.txt
 
 Console input:
 todo read book
@@ -86,7 +86,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Loads tasks after restarting ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && printf 'todo read book\nmark 1\nbye\n' | java -cp out Nob >/dev/null && printf 'list\nbye\n' | java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && printf 'todo read book\nmark 1\nbye\n' | java -cp out nob.Nob >/dev/null && printf 'list\nbye\n' | java -cp out nob.Nob
 
 Console input:
 
@@ -118,7 +118,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Ignores malformed saved tasks ===
 Command:
-rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out src/main/java/*.java && printf 'list\nbye\n' | java -cp out Nob
+rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out $(find src/main/java -name '*.java') && printf 'list\nbye\n' | java -cp out nob.Nob
 
 Console input:
 
@@ -149,7 +149,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Unknown commands should not show raw terminal input artifacts ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 hello
@@ -185,7 +185,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Handles invalid task numbers ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 todo borrow book
@@ -240,7 +240,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Parses date and time inputs for deadlines and events ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 deadline return book /by 2/12/2019 1800
@@ -291,7 +291,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Rejects malformed deadline syntax without losing valid state ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 deadline return book /bySunday
@@ -341,7 +341,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Rejects malformed event syntax without losing valid state ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 event project meeting /from Mon 2pm /to 4pm
@@ -391,7 +391,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Handles empty todo and later valid todo without corrupting state ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 todo
@@ -440,7 +440,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Rejects empty deadline description ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 deadline /by 2
@@ -475,7 +475,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Rejects empty event description ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 event /from Mon 2pm /to 4pm
@@ -510,7 +510,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Shows available commands with help ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 help
@@ -552,7 +552,7 @@ ____________________________________________________________
 RESULT: PASSED
 === Deletes a task from the list ===
 Command:
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 
 Console input:
 todo first task

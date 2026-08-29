@@ -1,3 +1,7 @@
+package nob.task;
+
+import nob.exception.NobException;
+
 /**
  * Stores Nob's tasks and provides operations for changing the list.
  */

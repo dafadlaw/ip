@@ -10,7 +10,7 @@ Commands are run from the project root. The test runner compares complete output
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -48,7 +48,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob && cat data/nob.txt
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob && cat data/nob.txt
 ```
 
 - **Input**
@@ -118,7 +118,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && printf 'todo read book\nmark 1\nbye\n' | java -cp out Nob >/dev/null && printf 'list\nbye\n' | java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && printf 'todo read book\nmark 1\nbye\n' | java -cp out nob.Nob >/dev/null && printf 'list\nbye\n' | java -cp out nob.Nob
 ```
 
 - **Input**
@@ -161,7 +161,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out src/main/java/*.java && printf 'list\nbye\n' | java -cp out Nob
+rm -rf data && mkdir data && printf '%s\n' '[T] [ ]' '[D: ] task [ ]' 'not a task' > data/nob.txt && javac -d out $(find src/main/java -name '*.java') && printf 'list\nbye\n' | java -cp out nob.Nob
 ```
 
 - **Input**
@@ -203,7 +203,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -250,7 +250,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -316,7 +316,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -378,7 +378,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -439,7 +439,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -500,7 +500,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -560,7 +560,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -606,7 +606,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -652,7 +652,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**
@@ -705,7 +705,7 @@ ____________________________________________________________
 - **Command**
 
 ```sh
-rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
 ```
 
 - **Input**

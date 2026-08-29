@@ -1,3 +1,9 @@
+package nob.command;
+
+import nob.storage.Storage;
+import nob.task.TaskList;
+import nob.ui.Ui;
+
 /**
  * Removes every task from the task list.
  */

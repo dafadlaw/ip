@@ -1,3 +1,5 @@
+package nob.exception;
+
 /**
  * Represents errors specific to the Nob chatbot application.
  */

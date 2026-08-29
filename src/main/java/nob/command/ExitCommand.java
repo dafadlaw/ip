@@ -1,3 +1,9 @@
+package nob.command;
+
+import nob.storage.Storage;
+import nob.task.TaskList;
+import nob.ui.Ui;
+
 /**
  * Displays Nob's farewell message and ends the application.
  */
