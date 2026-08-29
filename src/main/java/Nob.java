@@ -51,7 +51,8 @@ public class Nob {
                     }
 
                     if (command.equals("help")) {
-                        ui.showHelp();
+                        Command helpCommand = new HelpCommand();
+                        helpCommand.execute(tasks, ui, storage);
                     } else if (command.equals("clear")) {
                         clearTasks(tasks, storage, ui);
                     } else if (command.equals("list")) {
