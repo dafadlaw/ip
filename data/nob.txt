@@ -1,1 +1,6 @@
-[T] 2 [ ]
+[T] first task [ ]
+[T] third task [ ]
+[D: May 02 1900, 7:00PM] return book [ ]
+[D: 3/5/60] study [ ]
+[D: 5/6/2026] eat [ ]
+[E: Apr 04 2000, 12:00AM to Apr 04 2001, 12:00PM] lol [ ]

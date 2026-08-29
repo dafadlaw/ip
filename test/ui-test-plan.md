@@ -238,6 +238,61 @@ Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
 
+## Test Case: Parses date and time inputs for deadlines and events
+
+- **Aim:** Verify that dates and times are understood as date values rather than plain text, while preserving the task list format.
+- **Command**
+
+```sh
+rm -rf data && javac -d out src/main/java/*.java && java -cp out Nob
+```
+
+- **Input**
+
+```text
+deadline return book /by 2/12/2019 1800
+event team sync /from 2019-12-02 1800 /to 2019-12-02 1900
+list
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Dec 02 2019, 6:00PM] return book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Alrighty. I've added this task:
+  [E: Dec 02 2019, 6:00PM to Dec 02 2019, 7:00PM] team sync [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D: Dec 02 2019, 6:00PM] return book [ ]
+2.[E: Dec 02 2019, 6:00PM to Dec 02 2019, 7:00PM] team sync [ ]
+____________________________________________________________
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
 ## Test Case: Rejects malformed deadline syntax without losing valid state
 
 - **Aim:** Ensure a malformed deadline command is rejected while a later valid deadline remains in the task list.
