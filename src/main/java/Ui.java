@@ -40,6 +40,11 @@ public class Ui {
         System.out.println("Goodbye! Hope to see you soon mate!");
     }
 
+    /** Displays a message explaining that saved tasks could not be loaded. */
+    public void showLoadingError() {
+        System.out.println("I couldn't load the saved tasks, so I'm starting with an empty list.");
+    }
+
     /** Displays the help text listing all available commands. */
     public void showHelp() {
         System.out.println("Here are the commands you can use:");
