@@ -54,7 +54,8 @@ public class Nob {
                         Command helpCommand = new HelpCommand();
                         helpCommand.execute(tasks, ui, storage);
                     } else if (command.equals("clear")) {
-                        clearTasks(tasks, storage, ui);
+                        Command clearCommand = new ClearCommand();
+                        clearCommand.execute(tasks, ui, storage);
                     } else if (command.equals("list")) {
                         Command listCommand = new ListCommand();
                         listCommand.execute(tasks, ui, storage);
@@ -89,13 +90,6 @@ public class Nob {
             ui.showInputError();
             exception.printStackTrace();
         }
-    }
-
-    /** Clears every task in the current list and writes the empty list to disk. */
-    private static void clearTasks(TaskList tasks, Storage storage, Ui ui) {
-        tasks.clear();
-        saveTasks(storage, tasks, ui);
-        ui.showTasksCleared();
     }
 
     /**
