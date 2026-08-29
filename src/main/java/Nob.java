@@ -44,7 +44,8 @@ public class Nob {
 
                 try {
                     if (command.equals("bye")) {
-                        ui.showGoodbye();
+                        Command exitCommand = new ExitCommand();
+                        exitCommand.execute(tasks, ui, storage);
                         ui.showDivider();
                         break;
                     }
