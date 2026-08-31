@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'checkstyle'
     id 'com.gradleup.shadow' version '9.5.1'
 }
 
@@ -17,6 +18,8 @@ dependencies {
     String jUnitVersion = '5.14.4'
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
+
+    implementation 'com.joestelmach:natty:0.13'
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
@@ -37,7 +40,7 @@ test {
 }
 
 application {
-    mainClass = 'seedu.duke.Duke'
+    mainClass = 'nob.Nob'
 }
 
 jar {
@@ -53,4 +56,5 @@ shadowJar {
 
 run {
     standardInput = System.in
+    enableAssertions = true
 }
