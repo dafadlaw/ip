@@ -42,6 +42,7 @@ After each code change, review and update the JUnit tests in `src/test/java` as 
 
 ## Git
 
+For every future commit in this project, use and follow the project-local `seedu-git-standard` skill at `.codex/skills/seedu-git-standard`.
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
