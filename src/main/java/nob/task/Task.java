@@ -1,5 +1,7 @@
 package nob.task;
 
+import java.util.Locale;
+
 /**
  * Represents a task with a description and completion status.
  */
@@ -37,6 +39,16 @@ public class Task {
     /** Marks this task as incomplete. */
     public void markAsUndone() {
         isDone = false;
+    }
+
+    /**
+     * Returns whether this task's description contains the specified keyword, ignoring case.
+     *
+     * @param keyword Keyword to find in the task description.
+     * @return Whether the task description contains the keyword.
+     */
+    public boolean hasKeyword(String keyword) {
+        return description.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 
     /**

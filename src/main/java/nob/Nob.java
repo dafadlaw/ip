@@ -74,6 +74,8 @@ public class Nob {
                     } else if (command.equals("list")) {
                         Command listCommand = new ListCommand();
                         listCommand.execute(tasks, ui, storage);
+                    } else if (command.equals("find") || command.startsWith("find ")) {
+                        findTasks(command, tasks, ui);
                     } else if (command.startsWith("mark ")) {
                         markTask(command, tasks, true, storage, ui);
                     } else if (command.startsWith("unmark ")) {
@@ -152,6 +154,22 @@ public class Nob {
         Task removedTask = tasks.deleteTask(Parser.parseTaskNumber(command));
         saveTasks(storage, tasks, ui);
         ui.showTaskDeleted(removedTask, tasks.getTaskCount());
+    }
+
+    /**
+     * Finds and displays tasks whose descriptions contain the requested keyword.
+     *
+     * @param command The find command entered by the user.
+     * @param tasks The user's task list.
+     * @param ui The console user interface.
+     * @throws NobException If the keyword is missing.
+     */
+    private static void findTasks(String command, TaskList tasks, Ui ui) throws NobException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new NobException("Use: find KEYWORD\n(eg., find book)");
+        }
+        ui.showMatchingTasks(tasks, keyword);
     }
 
     /** Saves tasks and reports if the file could not be updated. */
