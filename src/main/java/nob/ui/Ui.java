@@ -74,6 +74,31 @@ public class Ui {
         }
     }
 
+    /**
+     * Displays tasks whose descriptions contain the specified keyword.
+     *
+     * @param tasks The task list to search.
+     * @param keyword Keyword to find in task descriptions.
+     * @throws NobException If a task cannot be read from the list.
+     */
+    public void showMatchingTasks(TaskList tasks, String keyword) throws NobException {
+        boolean hasMatchingTask = false;
+        for (int index = 1; index <= tasks.getTaskCount(); index++) {
+            Task task = tasks.getTask(index);
+            if (task.hasKeyword(keyword)) {
+                if (!hasMatchingTask) {
+                    System.out.println("Here are the matching tasks in your list:");
+                    hasMatchingTask = true;
+                }
+                System.out.println(index + "." + task);
+            }
+        }
+
+        if (!hasMatchingTask) {
+            System.out.println("No matching tasks found.");
+        }
+    }
+
     /** Displays a message when the task-list capacity has been reached. */
     public void showTaskLimit(int capacity) {
         System.out.println("I can only store up to " + capacity + " tasks.");
@@ -120,6 +145,7 @@ public class Ui {
         System.out.println("  todo DESCRIPTION");
         System.out.println("  deadline DESCRIPTION /by DATE_OR_TIME");
         System.out.println("  event DESCRIPTION /from START /to END");
+        System.out.println("  find KEYWORD");
         System.out.println("  mark TASK_NUMBER");
         System.out.println("  unmark TASK_NUMBER");
         System.out.println("  delete TASK_NUMBER");

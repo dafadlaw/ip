@@ -3,6 +3,8 @@ package nob.task;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the state changes and display behavior of {@link Task}.
@@ -60,5 +62,16 @@ public class TaskTest {
         task.markAsDone();
 
         assertEquals("read book [✓]", task.toString());
+    }
+
+    /**
+     * Verifies that keyword matching ignores case and matches part of a task description.
+     */
+    @Test
+    public void hasKeyword_mixedCasePartialKeyword_keywordFound() {
+        Task task = new Task("Read the library book");
+
+        assertTrue(task.hasKeyword("BOOK"));
+        assertFalse(task.hasKeyword("report"));
     }
 }

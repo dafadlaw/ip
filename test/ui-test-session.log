@@ -538,11 +538,71 @@ Here are the commands you can use:
   todo DESCRIPTION
   deadline DESCRIPTION /by DATE_OR_TIME
   event DESCRIPTION /from START /to END
+  find KEYWORD
   mark TASK_NUMBER
   unmark TASK_NUMBER
   delete TASK_NUMBER
   clear
   bye
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
+=== Finds tasks by a keyword ===
+Command:
+rm -rf data && javac -d out $(find src/main/java -name '*.java') && java -cp out nob.Nob
+
+Console input:
+todo read book
+deadline return book /by Friday
+event team meeting /from Mon /to Tue
+find BOOK
+bye
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Alrighty. I've added this task:
+  [T] read book [ ]
+Now you have 1 tasks in the list.
+____________________________________________________________
+
+
+____________________________________________________________
+Alrighty. I've added this task:
+  [D: Friday] return book [ ]
+Now you have 2 tasks in the list.
+____________________________________________________________
+
+
+____________________________________________________________
+Alrighty. I've added this task:
+  [E: Mon to Tue] team meeting [ ]
+Now you have 3 tasks in the list.
+____________________________________________________________
+
+
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T] read book [ ]
+2.[D: Friday] return book [ ]
 ____________________________________________________________
 
 
@@ -617,4 +677,4 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
-All 14 UI test case(s) passed.
+All 15 UI test case(s) passed.
