@@ -56,8 +56,8 @@ public final class DateTimeUtil {
     /**
      * Parses a supported date or date-time string.
      *
-     * @param value raw user input or stored value
-     * @return parsed date-time if the input format is supported
+     * @param value Raw user input or stored value.
+     * @return Parsed date-time if the input format is supported.
      */
     public static Optional<LocalDateTime> parseDateTime(String value) {
         if (value == null) {
@@ -99,8 +99,8 @@ public final class DateTimeUtil {
     /**
      * Formats a value for display in the task list.
      *
-     * @param value value to format
-     * @return a readable string for display
+     * @param value Value to format.
+     * @return A readable string for display.
      */
     public static String formatDisplay(LocalDateTime value) {
         if (value == null) {
@@ -115,8 +115,8 @@ public final class DateTimeUtil {
     /**
      * Formats a value or falls back to the original input when it is not a recognised date/time.
      *
-     * @param value raw value from the user or file
-     * @return formatted display value
+     * @param value Raw value from the user or file.
+     * @return Formatted display value.
      */
     public static String formatDisplay(String value) {
         return parseDateTime(value)

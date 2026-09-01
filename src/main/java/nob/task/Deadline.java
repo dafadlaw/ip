@@ -17,8 +17,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline task.
      *
-     * @param description text describing the task
-     * @param by the date or time by which the task should be completed
+     * @param description Text describing the task.
+     * @param by The date or time by which the task should be completed.
      */
     public Deadline(String description, String by) {
         super(description);
@@ -29,8 +29,8 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline task from an already parsed date-time.
      *
-     * @param description text describing the task
-     * @param by the parsed deadline value
+     * @param description Text describing the task.
+     * @param by The parsed deadline value.
      */
     public Deadline(String description, LocalDateTime by) {
         super(description);
@@ -45,6 +45,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D: " + (byDateTime == null ? byText : DateTimeUtil.formatDisplay(byDateTime)) + "] " + super.toString();
+        String deadline = byDateTime == null ? byText : DateTimeUtil.formatDisplay(byDateTime);
+        return "[D: " + deadline + "] " + super.toString();
     }
 }

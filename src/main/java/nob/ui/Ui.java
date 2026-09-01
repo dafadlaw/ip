@@ -64,7 +64,8 @@ public class Ui {
     /** Displays every task in the supplied list. */
     public void showTaskList(TaskList tasks) throws NobException {
         if (tasks.getTaskCount() == 0) {
-            System.out.println("Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.");
+            System.out.println("Your task list is empty right now. Add a task using the 'todo', "
+                    + "'deadline' or 'event' commands.");
             return;
         }
 

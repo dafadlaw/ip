@@ -13,9 +13,9 @@ public class Parser {
     /**
      * Parses a {@code todo DESCRIPTION} command into a to-do task.
      *
-     * @param command the complete command entered by the user
-     * @return the to-do task described by the command
-     * @throws NobException if the description is missing
+     * @param command The complete command entered by the user.
+     * @return The to-do task described by the command.
+     * @throws NobException If the description is missing.
      */
     public static Task parseTodo(String command) throws NobException {
         String description = command.substring("todo".length()).trim();
@@ -28,9 +28,9 @@ public class Parser {
     /**
      * Parses a {@code deadline DESCRIPTION /by TIME} command into a deadline task.
      *
-     * @param command the complete command entered by the user
-     * @return the deadline task described by the command
-     * @throws NobException if the command syntax is invalid
+     * @param command The complete command entered by the user.
+     * @return The deadline task described by the command.
+     * @throws NobException If the command syntax is invalid.
      */
     public static Task parseDeadline(String command) throws NobException {
         String details = command.substring("deadline".length()).trim();
@@ -69,9 +69,9 @@ public class Parser {
     /**
      * Parses an {@code event DESCRIPTION /from START /to END} command into an event task.
      *
-     * @param command the complete command entered by the user
-     * @return the event task described by the command
-     * @throws NobException if the command syntax is invalid
+     * @param command The complete command entered by the user.
+     * @return The event task described by the command.
+     * @throws NobException If the command syntax is invalid.
      */
     public static Task parseEvent(String command) throws NobException {
         String details = command.substring("event".length()).trim();
@@ -113,9 +113,9 @@ public class Parser {
     /**
      * Parses the task number from a mark, unmark, or delete command.
      *
-     * @param command the complete command entered by the user
-     * @return the task number
-     * @throws NobException if the task number is not an integer
+     * @param command The complete command entered by the user.
+     * @return The task number.
+     * @throws NobException If the task number is not an integer.
      */
     public static int parseTaskNumber(String command) throws NobException {
         String numberText = command.substring(command.indexOf(' ') + 1).trim();

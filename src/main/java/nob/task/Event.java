@@ -23,9 +23,9 @@ public class Event extends Task {
     /**
      * Creates an incomplete event task.
      *
-     * @param description text describing the event
-     * @param from the event start date or time
-     * @param to the event end date or time
+     * @param description Text describing the event.
+     * @param from The event start date or time.
+     * @param to The event end date or time.
      */
     public Event(String description, String from, String to) {
         super(description);
@@ -38,9 +38,9 @@ public class Event extends Task {
     /**
      * Creates an incomplete event task from already parsed date-times.
      *
-     * @param description text describing the event
-     * @param from the event start date or time
-     * @param to the event end date or time
+     * @param description Text describing the event.
+     * @param from The event start date or time.
+     * @param to The event end date or time.
      */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);

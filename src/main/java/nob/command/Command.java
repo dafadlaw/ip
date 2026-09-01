@@ -12,10 +12,10 @@ public abstract class Command {
     /**
      * Performs this command using the application's collaborators.
      *
-     * @param tasks the user's task list
-     * @param ui the console user interface
-     * @param storage persistent task storage
-     * @throws NobException if the command cannot be completed
+     * @param tasks The user's task list.
+     * @param ui The console user interface.
+     * @param storage Persistent task storage.
+     * @throws NobException If the command cannot be completed.
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws NobException;
 

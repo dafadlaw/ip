@@ -21,7 +21,7 @@ public class Storage {
     /**
      * Creates storage that reads from and writes to the specified file.
      *
-     * @param filePath the task data file
+     * @param filePath The task data file.
      */
     public Storage(Path filePath) {
         this.filePath = filePath;
@@ -30,9 +30,9 @@ public class Storage {
     /**
      * Loads valid task records into the supplied task array.
      *
-     * @param tasks the array that receives the loaded tasks
-     * @return the number of tasks loaded
-     * @throws NobException if the task file cannot be read
+     * @param tasks The array that receives the loaded tasks.
+     * @return The number of tasks loaded.
+     * @throws NobException If the task file cannot be read.
      */
     public int loadTasks(Task[] tasks) throws NobException {
         if (!Files.exists(filePath)) {
@@ -62,9 +62,9 @@ public class Storage {
     /**
      * Saves all valid tasks in the supplied array to the task data file.
      *
-     * @param tasks the array containing tasks to save
-     * @param taskCount the number of tasks to save from the array
-     * @return {@code true} if the task file was written successfully
+     * @param tasks The array containing tasks to save.
+     * @param taskCount The number of tasks to save from the array.
+     * @return {@code true} if the task file was written successfully.
      */
     public boolean saveTasks(Task[] tasks, int taskCount) {
         StringBuilder fileContents = new StringBuilder();

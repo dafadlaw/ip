@@ -31,7 +31,7 @@ public class Nob {
     /**
      * Reads and responds to commands until the user enters {@code bye}.
      *
-     * @param args command-line arguments, which this application does not use
+     * @param args Command-line arguments, which this application does not use.
      */
     public static void main(String[] args) {
         Ui ui = new Ui();
@@ -47,7 +47,8 @@ public class Nob {
         TaskList tasks = new TaskList(loadedTasks, taskCount);
         ui.showWelcome();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
             while (true) {
                 String command = reader.readLine();
                 if (command == null) {
@@ -109,9 +110,9 @@ public class Nob {
     /**
      * Stores a task and reports the result to the user when storage is available.
      *
-     * @param task the task to store
-     * @param tasks the user's task list
-     * @param storage persistent task storage
+     * @param task The task to store.
+     * @param tasks The user's task list.
+     * @param storage Persistent task storage.
      */
     private static void addTask(Task task, TaskList tasks, Storage storage, Ui ui) {
         if (!tasks.addTask(task)) {
@@ -126,10 +127,10 @@ public class Nob {
     /**
      * Marks a task as complete or incomplete using its position in the list.
      *
-     * @param command the mark or unmark command entered by the user
-     * @param tasks the user's task list
-     * @param isDone whether the task should be marked as completed
-     * @param storage persistent task storage
+     * @param command The mark or unmark command entered by the user.
+     * @param tasks The user's task list.
+     * @param isDone Whether the task should be marked as completed.
+     * @param storage Persistent task storage.
      */
     private static void markTask(String command, TaskList tasks, boolean isDone, Storage storage, Ui ui)
             throws NobException {
@@ -141,10 +142,10 @@ public class Nob {
     /**
      * Deletes a task from the list by its position.
      *
-     * @param command the delete command entered by the user
-     * @param tasks the user's task list
-     * @param storage persistent task storage
-     * @throws NobException if the task index is invalid
+     * @param command The delete command entered by the user.
+     * @param tasks The user's task list.
+     * @param storage Persistent task storage.
+     * @throws NobException If the task index is invalid.
      */
     private static void deleteTask(String command, TaskList tasks, Storage storage, Ui ui)
             throws NobException {

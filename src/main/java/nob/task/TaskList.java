@@ -15,7 +15,7 @@ public class TaskList {
     /**
      * Creates an empty task list with the specified capacity.
      *
-     * @param capacity maximum number of tasks that can be stored
+     * @param capacity Maximum number of tasks that can be stored.
      */
     public TaskList(int capacity) {
         tasks = new Task[capacity];
@@ -25,8 +25,8 @@ public class TaskList {
     /**
      * Creates a task list from the supplied task array and valid task count.
      *
-     * @param tasks the initial task array
-     * @param taskCount number of valid tasks in the array
+     * @param tasks The initial task array.
+     * @param taskCount Number of valid tasks in the array.
      */
     public TaskList(Task[] tasks, int taskCount) {
         this.tasks = tasks;
@@ -36,8 +36,8 @@ public class TaskList {
     /**
      * Adds a task when the list has capacity.
      *
-     * @param task the task to add
-     * @return whether the task was added
+     * @param task The task to add.
+     * @return Whether the task was added.
      */
     public boolean addTask(Task task) {
         if (taskCount == tasks.length) {
@@ -59,10 +59,10 @@ public class TaskList {
     /**
      * Marks the numbered task as complete or incomplete.
      *
-     * @param taskNumber one-based task number
-     * @param isDone whether to mark the task as complete
-     * @return the updated task
-     * @throws NobException if the task number is invalid
+     * @param taskNumber One-based task number.
+     * @param isDone Whether to mark the task as complete.
+     * @return The updated task.
+     * @throws NobException If the task number is invalid.
      */
     public Task markTask(int taskNumber, boolean isDone) throws NobException {
         Task task = getTask(taskNumber);
@@ -77,9 +77,9 @@ public class TaskList {
     /**
      * Removes and returns the numbered task.
      *
-     * @param taskNumber one-based task number
-     * @return the removed task
-     * @throws NobException if the task number is invalid
+     * @param taskNumber One-based task number.
+     * @return The removed task.
+     * @throws NobException If the task number is invalid.
      */
     public Task deleteTask(int taskNumber) throws NobException {
         Task removedTask = getTask(taskNumber);
@@ -94,9 +94,9 @@ public class TaskList {
     /**
      * Returns the numbered task.
      *
-     * @param taskNumber one-based task number
-     * @return the matching task
-     * @throws NobException if the task number is invalid
+     * @param taskNumber One-based task number.
+     * @return The matching task.
+     * @throws NobException If the task number is invalid.
      */
     public Task getTask(int taskNumber) throws NobException {
         if (taskNumber < 1 || taskNumber > taskCount) {
