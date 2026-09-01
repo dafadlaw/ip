@@ -32,6 +32,10 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 After each code update, first update `test/ui-test-plan.md` when the change affects its test cases, commands, inputs, or expected output. Then invoke the project-local `test-ui` skill by running `bash .codex/skills/test-ui/scripts/run-ui-tests.sh` from the project root. If a test fails, stop the test session at that failure and report the actual and expected output before making further code changes.
 
+## JUnit testing after code changes
+
+After each code change, review and update the JUnit tests in `src/test/java` as needed. Maintain coverage for roughly the top 50% highest-value methods, prioritising complex, core, and critical business logic over trivial methods. Keep test files in the Gradle/JUnit package layout that mirrors the production class being tested, and run `./gradlew test` using Java 25.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
