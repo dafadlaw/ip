@@ -1,11 +1,12 @@
 package nob.parser;
 
-import nob.exception.NobException;
-import nob.task.Task;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+import nob.exception.NobException;
+import nob.task.Task;
 
 /**
  * Tests conversion of user command text into Nob task objects and task numbers.
@@ -46,8 +47,8 @@ public class ParserTest {
      */
     @Test
     public void parseDeadline_missingDescription_exceptionThrown() {
-        NobException exception = assertThrows(NobException.class,
-                () -> Parser.parseDeadline("deadline /by Friday"));
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseDeadline("deadline /by Friday"));
 
         assertEquals("Description should not be empty.\n"
                 + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
@@ -59,8 +60,8 @@ public class ParserTest {
      */
     @Test
     public void parseDeadline_malformedDelimiter_exceptionThrown() {
-        NobException exception = assertThrows(NobException.class,
-                () -> Parser.parseDeadline("deadline return book /byFriday"));
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseDeadline("deadline return book /byFriday"));
 
         assertEquals("Check that there is a space before and after '/by'.\n"
                 + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
@@ -82,8 +83,8 @@ public class ParserTest {
      */
     @Test
     public void parseEvent_missingDescription_exceptionThrown() {
-        NobException exception = assertThrows(NobException.class,
-                () -> Parser.parseEvent("event /from Mon 2pm /to 4pm"));
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event /from Mon 2pm /to 4pm"));
 
         assertEquals("Description should not be empty.\n"
                 + "Use: event DESCRIPTION /from START /to END\n"
@@ -95,8 +96,8 @@ public class ParserTest {
      */
     @Test
     public void parseEvent_malformedDelimiter_exceptionThrown() {
-        NobException exception = assertThrows(NobException.class,
-                () -> Parser.parseEvent("event team sync /fromMon 2pm /to 4pm"));
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /fromMon 2pm /to 4pm"));
 
         assertEquals("Check that there is a space before and after '/from' and '/to'.\n"
                 + "Use: event DESCRIPTION /from START /to END\n"
