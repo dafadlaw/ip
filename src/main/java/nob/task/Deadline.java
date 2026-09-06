@@ -27,18 +27,6 @@ public class Deadline extends Task {
     }
 
     /**
-     * Creates an incomplete deadline task from an already parsed date-time.
-     *
-     * @param description Text describing the task.
-     * @param by The parsed deadline value.
-     */
-    public Deadline(String description, LocalDateTime by) {
-        super(description);
-        this.byDateTime = by;
-        this.byText = DateTimeUtil.formatDisplay(by);
-    }
-
-    /**
      * Returns this deadline in the format used when displaying a task list.
      *
      * @return the deadline, task description, and completion status

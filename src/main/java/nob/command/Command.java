@@ -18,13 +18,4 @@ public abstract class Command {
      * @throws NobException If the command cannot be completed.
      */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws NobException;
-
-    /**
-     * Returns whether this command ends the application.
-     *
-     * @return {@code true} when the command exits Nob
-     */
-    public boolean isExit() {
-        return false;
-    }
 }

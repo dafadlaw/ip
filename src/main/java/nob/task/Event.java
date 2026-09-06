@@ -36,21 +36,6 @@ public class Event extends Task {
     }
 
     /**
-     * Creates an incomplete event task from already parsed date-times.
-     *
-     * @param description Text describing the event.
-     * @param from The event start date or time.
-     * @param to The event end date or time.
-     */
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
-        super(description);
-        this.fromDateTime = from;
-        this.toDateTime = to;
-        this.fromText = DateTimeUtil.formatDisplay(from);
-        this.toText = DateTimeUtil.formatDisplay(to);
-    }
-
-    /**
      * Returns this event in the format used when displaying a task list.
      *
      * @return the event time frame, description, and completion status

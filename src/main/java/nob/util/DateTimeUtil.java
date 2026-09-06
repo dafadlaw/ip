@@ -112,15 +112,4 @@ public final class DateTimeUtil {
         return value.format(DISPLAY_FORMATTER);
     }
 
-    /**
-     * Formats a value or falls back to the original input when it is not a recognised date/time.
-     *
-     * @param value Raw value from the user or file.
-     * @return Formatted display value.
-     */
-    public static String formatDisplay(String value) {
-        return parseDateTime(value)
-                .map(DateTimeUtil::formatDisplay)
-                .orElse(value == null ? "" : value.trim());
-    }
 }
