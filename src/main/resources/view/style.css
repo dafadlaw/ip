@@ -1,0 +1,71 @@
+.root {
+    -fx-font-family: "System";
+    -fx-font-size: 14px;
+}
+
+.dialog-container {
+    -fx-background-color: #f7f7f7;
+    -fx-padding: 18px;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: #f7f7f7;
+}
+
+.input-bar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e3e3e3 transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 12px;
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6px;
+    -fx-border-color: #d6d6d6;
+    -fx-border-radius: 6px;
+    -fx-padding: 8px 10px;
+}
+
+.text-field:focused {
+    -fx-border-color: #737373;
+}
+
+.send-button {
+    -fx-background-color: #262626;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 8px 16px;
+}
+
+.send-button:hover {
+    -fx-background-color: #111111;
+}
+
+.user-bubble,
+.nob-bubble {
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 14px;
+}
+
+.user-bubble {
+    -fx-background-color: #262626;
+    -fx-text-fill: #ffffff;
+}
+
+.nob-bubble {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e3e3e3;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #262626;
+}
+
+.avatar-fallback {
+    -fx-alignment: center;
+    -fx-background-color: #e9e9e9;
+    -fx-background-radius: 22px;
+    -fx-font-size: 21px;
+    -fx-min-height: 44px;
+    -fx-min-width: 44px;
+}

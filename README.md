@@ -1,6 +1,26 @@
 # Nob project template
 
-This is a project template for a greenfield Java project. Given below are instructions on how to use it.
+Nob is a JavaFX chatbot task manager. Run the graphical application from the project root with:
+
+```sh
+./gradlew run
+```
+
+Chat with Nob using commands such as `todo read book`, `deadline return book /by Friday`, and `find book`.
+The task list is saved in `data/nob.txt`. The original terminal interface remains available for regression testing
+with `./gradlew runConsole`.
+
+### Custom avatars
+
+To use your own pictures in the chat interface:
+
+1. Create the folder `src/main/resources/images` if it does not exist.
+2. Add the user's picture as `user-avatar.png`.
+3. Add Nob's picture as `nob-avatar.png`.
+4. Restart the application with `./gradlew run`.
+
+Nob displays the emoji avatars when either picture is missing. Square pictures work best because avatars are cropped
+into circles.
 
 ## Setting up in Intellij
 
