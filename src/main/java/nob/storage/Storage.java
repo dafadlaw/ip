@@ -15,6 +15,14 @@ import nob.task.Todo;
  * Loads tasks from, and saves tasks to, Nob's data file.
  */
 public class Storage {
+    private static final String TODO_PREFIX = "[T] ";
+    private static final String DEADLINE_PREFIX = "[D: ";
+    private static final String EVENT_PREFIX = "[E: ";
+    private static final String DETAILS_END = "] ";
+    private static final String EVENT_TIME_SEPARATOR = " to ";
+    private static final String UNDONE_STATUS_SUFFIX = " [ ]";
+    private static final String DONE_STATUS_SUFFIX = " [✓]";
+
     /** The file used to persist the current task list. */
     private final Path filePath;
 
@@ -83,53 +91,74 @@ public class Storage {
 
     /** Parses one task line written by {@link #saveTasks(Task[], int)}. */
     private Task parseTask(String savedTask) {
-        if (savedTask.length() < 7 || !(savedTask.endsWith("[ ]") || savedTask.endsWith("[✓]"))) {
+        if (!hasValidStatusSuffix(savedTask)) {
             return null;
         }
 
-        boolean isDone = savedTask.endsWith("[✓]");
-        String taskText = savedTask.substring(0, savedTask.length() - 4).trim();
-        if (taskText.length() < 4) {
-            return null;
-        }
-        Task task;
-        if (taskText.startsWith("[T] ")) {
-            String description = taskText.substring(4).trim();
-            if (description.isEmpty()) {
-                return null;
-            }
-            task = new Todo(description);
-        } else if (taskText.startsWith("[D: ")) {
-            int detailsEnd = taskText.lastIndexOf("] ");
-            if (detailsEnd < 5) {
-                return null;
-            }
-            String by = taskText.substring(4, detailsEnd);
-            String description = taskText.substring(detailsEnd + 2);
-            if (by.trim().isEmpty() || description.trim().isEmpty()) {
-                return null;
-            }
-            task = new Deadline(description, by);
-        } else if (taskText.startsWith("[E: ")) {
-            int detailsEnd = taskText.lastIndexOf("] ");
-            int separator = taskText.lastIndexOf(" to ", detailsEnd);
-            if (detailsEnd < 5 || separator < 5) {
-                return null;
-            }
-            String from = taskText.substring(4, separator);
-            String to = taskText.substring(separator + 4, detailsEnd);
-            String description = taskText.substring(detailsEnd + 2);
-            if (from.trim().isEmpty() || to.trim().isEmpty() || description.trim().isEmpty()) {
-                return null;
-            }
-            task = new Event(description, from, to);
-        } else {
+        String taskText = removeStatusSuffix(savedTask);
+        Task task = parseTaskDetails(taskText);
+        if (task == null) {
             return null;
         }
 
-        if (isDone) {
+        if (savedTask.endsWith(DONE_STATUS_SUFFIX)) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /** Returns whether a saved task ends with a supported completion status. */
+    private boolean hasValidStatusSuffix(String savedTask) {
+        return savedTask.endsWith(UNDONE_STATUS_SUFFIX) || savedTask.endsWith(DONE_STATUS_SUFFIX);
+    }
+
+    /** Removes the completion status from a saved task record. */
+    private String removeStatusSuffix(String savedTask) {
+        return savedTask.substring(0, savedTask.length() - UNDONE_STATUS_SUFFIX.length()).trim();
+    }
+
+    /** Creates the task represented by the type-specific portion of a record. */
+    private Task parseTaskDetails(String taskText) {
+        if (taskText.startsWith(TODO_PREFIX)) {
+            return parseTodo(taskText);
+        } else if (taskText.startsWith(DEADLINE_PREFIX)) {
+            return parseDeadline(taskText);
+        } else if (taskText.startsWith(EVENT_PREFIX)) {
+            return parseEvent(taskText);
+        }
+        return null;
+    }
+
+    /** Creates a to-do task from a saved record, or returns {@code null} if invalid. */
+    private Task parseTodo(String taskText) {
+        String description = taskText.substring(TODO_PREFIX.length()).trim();
+        return description.isEmpty() ? null : new Todo(description);
+    }
+
+    /** Creates a deadline task from a saved record, or returns {@code null} if invalid. */
+    private Task parseDeadline(String taskText) {
+        int detailsEnd = taskText.lastIndexOf(DETAILS_END);
+        if (detailsEnd <= DEADLINE_PREFIX.length()) {
+            return null;
+        }
+
+        String by = taskText.substring(DEADLINE_PREFIX.length(), detailsEnd).trim();
+        String description = taskText.substring(detailsEnd + DETAILS_END.length()).trim();
+        return by.isEmpty() || description.isEmpty() ? null : new Deadline(description, by);
+    }
+
+    /** Creates an event task from a saved record, or returns {@code null} if invalid. */
+    private Task parseEvent(String taskText) {
+        int detailsEnd = taskText.lastIndexOf(DETAILS_END);
+        int separator = taskText.lastIndexOf(EVENT_TIME_SEPARATOR, detailsEnd);
+        if (detailsEnd <= EVENT_PREFIX.length() || separator <= EVENT_PREFIX.length()) {
+            return null;
+        }
+
+        String from = taskText.substring(EVENT_PREFIX.length(), separator).trim();
+        String to = taskText.substring(separator + EVENT_TIME_SEPARATOR.length(), detailsEnd).trim();
+        String description = taskText.substring(detailsEnd + DETAILS_END.length()).trim();
+        return from.isEmpty() || to.isEmpty() || description.isEmpty()
+                ? null : new Event(description, from, to);
     }
 }
