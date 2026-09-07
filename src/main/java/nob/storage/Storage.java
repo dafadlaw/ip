@@ -3,7 +3,9 @@ package nob.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import nob.exception.NobException;
 import nob.task.Deadline;
@@ -78,6 +80,9 @@ public class Storage {
      * @return {@code true} if the task file was written successfully.
      */
     public boolean saveTasks(Task[] tasks, int taskCount) {
+        String fileContents = Arrays.stream(tasks, 0, taskCount)
+                .map(task -> task + System.lineSeparator())
+                .collect(Collectors.joining());
         assert tasks != null : "Saving requires a source task array";
         assert taskCount >= 0 && taskCount <= tasks.length
                 : "The saved task count must fit within the source array";
@@ -89,7 +94,7 @@ public class Storage {
 
         try {
             Files.createDirectories(filePath.getParent());
-            Files.writeString(filePath, fileContents.toString());
+            Files.writeString(filePath, fileContents);
         } catch (IOException exception) {
             return false;
         }
