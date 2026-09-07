@@ -2,6 +2,7 @@ package nob.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,14 @@ import org.junit.jupiter.api.Test;
  * Tests the state changes and display behavior of {@link Task}.
  */
 public class TaskTest {
+    /**
+     * Verifies that tasks cannot be constructed with blank descriptions.
+     */
+    @Test
+    public void constructor_blankDescription_assertionError() {
+        assertThrows(AssertionError.class, () -> new Task("   "));
+    }
+
     /**
      * Verifies that a newly created task is displayed as incomplete.
      */
@@ -73,5 +82,15 @@ public class TaskTest {
 
         assertTrue(task.hasKeyword("BOOK"));
         assertFalse(task.hasKeyword("report"));
+    }
+
+    /**
+     * Verifies that keyword matching only receives a parsed non-blank keyword.
+     */
+    @Test
+    public void hasKeyword_blankKeyword_assertionError() {
+        Task task = new Task("Read the library book");
+
+        assertThrows(AssertionError.class, () -> task.hasKeyword(" "));
     }
 }

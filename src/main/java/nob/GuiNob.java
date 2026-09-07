@@ -1,6 +1,7 @@
 package nob;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,9 @@ public class GuiNob extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(GuiNob.class.getResource("/view/MainWindow.fxml"));
+            URL mainWindowResource = GuiNob.class.getResource("/view/MainWindow.fxml");
+            assert mainWindowResource != null : "The application package must contain MainWindow.fxml";
+            FXMLLoader loader = new FXMLLoader(mainWindowResource);
             BorderPane root = loader.load();
             stage.setTitle("Nob — Your task companion");
             stage.setMinWidth(460);

@@ -1,6 +1,7 @@
 package nob.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -20,6 +21,14 @@ import nob.task.Todo;
  * Tests persistence of Nob tasks through {@link Storage}.
  */
 public class StorageTest {
+    /**
+     * Verifies that storage requires a path with a parent directory.
+     */
+    @Test
+    public void constructor_pathWithoutParent_assertionError() {
+        assertThrows(AssertionError.class, () -> new Storage(Path.of("nob.txt")));
+    }
+
     /**
      * Verifies that saved task types and completion statuses are restored accurately.
      */

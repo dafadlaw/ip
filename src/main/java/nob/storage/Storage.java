@@ -24,6 +24,8 @@ public class Storage {
      * @param filePath The task data file.
      */
     public Storage(Path filePath) {
+        assert filePath != null : "Storage requires a data-file path";
+        assert filePath.getParent() != null : "The data-file path must include a parent directory";
         this.filePath = filePath;
     }
 
@@ -35,6 +37,7 @@ public class Storage {
      * @throws NobException If the task file cannot be read.
      */
     public int loadTasks(Task[] tasks) throws NobException {
+        assert tasks != null : "Loading requires a destination task array";
         if (!Files.exists(filePath)) {
             return 0;
         }
@@ -67,8 +70,12 @@ public class Storage {
      * @return {@code true} if the task file was written successfully.
      */
     public boolean saveTasks(Task[] tasks, int taskCount) {
+        assert tasks != null : "Saving requires a source task array";
+        assert taskCount >= 0 && taskCount <= tasks.length
+                : "The saved task count must fit within the source array";
         StringBuilder fileContents = new StringBuilder();
         for (int index = 0; index < taskCount; index++) {
+            assert tasks[index] != null : "Every saved task slot below the task count must be occupied";
             fileContents.append(tasks[index]).append(System.lineSeparator());
         }
 
@@ -83,6 +90,7 @@ public class Storage {
 
     /** Parses one task line written by {@link #saveTasks(Task[], int)}. */
     private Task parseTask(String savedTask) {
+        assert savedTask != null : "Files.readAllLines must not produce null lines";
         if (savedTask.length() < 7 || !(savedTask.endsWith("[ ]") || savedTask.endsWith("[✓]"))) {
             return null;
         }
