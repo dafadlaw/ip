@@ -33,6 +33,14 @@ public class ParserTest {
     }
 
     /**
+     * Verifies that the dispatcher contract rejects the wrong command type.
+     */
+    @Test
+    public void parseTodo_wrongCommand_assertionError() {
+        assertThrows(AssertionError.class, () -> Parser.parseTodo("event meeting"));
+    }
+
+    /**
      * Verifies that a complete deadline command creates the expected task.
      */
     @Test
