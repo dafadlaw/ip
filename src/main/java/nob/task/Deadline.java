@@ -22,6 +22,8 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
+        assert by != null : "Deadline times must not be null";
+        assert !by.isBlank() : "Deadline times must not be blank after parsing";
         this.byDateTime = DateTimeUtil.parseDateTime(by).orElse(null);
         this.byText = by == null ? "" : by.trim();
     }

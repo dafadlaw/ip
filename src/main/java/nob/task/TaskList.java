@@ -18,6 +18,7 @@ public class TaskList {
      * @param capacity Maximum number of tasks that can be stored.
      */
     public TaskList(int capacity) {
+        assert capacity >= 0 : "Task-list capacity must not be negative";
         tasks = new Task[capacity];
         taskCount = 0;
     }
@@ -29,6 +30,12 @@ public class TaskList {
      * @param taskCount Number of valid tasks in the array.
      */
     public TaskList(Task[] tasks, int taskCount) {
+        assert tasks != null : "A task list requires a backing array";
+        assert taskCount >= 0 && taskCount <= tasks.length
+                : "The task count must fit within the backing array";
+        for (int index = 0; index < taskCount; index++) {
+            assert tasks[index] != null : "Every loaded task slot below the task count must be occupied";
+        }
         this.tasks = tasks;
         this.taskCount = taskCount;
     }
@@ -40,6 +47,9 @@ public class TaskList {
      * @return Whether the task was added.
      */
     public boolean addTask(Task task) {
+        assert task != null : "Only valid parsed tasks may be added";
+        assert taskCount >= 0 && taskCount <= tasks.length
+                : "The task count must remain within the backing array";
         if (taskCount == tasks.length) {
             return false;
         }
@@ -102,6 +112,7 @@ public class TaskList {
         if (taskNumber < 1 || taskNumber > taskCount) {
             throw new NobException("Please enter a task number from 1 to " + taskCount + ".");
         }
+        assert tasks[taskNumber - 1] != null : "Every numbered task slot must contain a task";
         return tasks[taskNumber - 1];
     }
 
