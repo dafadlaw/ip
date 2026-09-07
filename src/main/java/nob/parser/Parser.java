@@ -10,6 +10,19 @@ import nob.task.Todo;
  * Interprets command arguments and creates the corresponding task objects.
  */
 public class Parser {
+    private static final String TODO_COMMAND = "todo";
+    private static final String DEADLINE_COMMAND = "deadline";
+    private static final String EVENT_COMMAND = "event";
+    private static final String DEADLINE_DELIMITER = " /by ";
+    private static final String EVENT_START_DELIMITER = " /from ";
+    private static final String EVENT_END_DELIMITER = " /to ";
+
+    private static final String TODO_USAGE = "Use: todo DESCRIPTION\n(eg., todo borrow book)";
+    private static final String DEADLINE_USAGE = "Use: deadline DESCRIPTION /by DATE_OR_TIME";
+    private static final String DEADLINE_EXAMPLE = "(eg., deadline return book /by Sunday)";
+    private static final String EVENT_USAGE = "Use: event DESCRIPTION /from START /to END";
+    private static final String EVENT_EXAMPLE = "(eg., event project meeting /from Mon 2pm /to 4pm)";
+
     /**
      * Parses a {@code todo DESCRIPTION} command into a to-do task.
      *
@@ -23,7 +36,7 @@ public class Parser {
                 : "parseTodo must only receive todo commands";
         String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
-            throw new NobException("Use: todo DESCRIPTION\n(eg., todo borrow book)");
+            throw new NobException(TODO_USAGE);
         }
         return new Todo(description);
     }
@@ -42,32 +55,27 @@ public class Parser {
         String details = command.substring("deadline".length()).trim();
         if (details.startsWith("/by")) {
             throw new NobException("Description should not be empty.\n"
-                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
+                    + DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
         }
 
-        int byIndex = details.indexOf(" /by ");
-        if (byIndex < 1 || byIndex + " /by ".length() == details.length()) {
+        int byIndex = details.indexOf(DEADLINE_DELIMITER);
+        if (byIndex < 1 || byIndex + DEADLINE_DELIMITER.length() == details.length()) {
             if (details.contains("/by")) {
                 throw new NobException("Check that there is a space before and after '/by'.\n"
-                        + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                        + "(eg., deadline return book /by Sunday)");
+                        + DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
             }
-            throw new NobException("Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
+            throw new NobException(DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
         }
 
         String description = details.substring(0, byIndex).trim();
         if (description.isEmpty()) {
             throw new NobException("Description should not be empty.\n"
-                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
-                    + "(eg., deadline return book /by Sunday)");
+                    + DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
         }
 
-        String by = details.substring(byIndex + " /by ".length()).trim();
+        String by = details.substring(byIndex + DEADLINE_DELIMITER.length()).trim();
         if (by.isEmpty()) {
-            throw new NobException("Deadline time should not be empty.\n"
-                    + "Use: deadline DESCRIPTION /by DATE_OR_TIME");
+            throw new NobException("Deadline time should not be empty.\n" + DEADLINE_USAGE);
         }
         return new Deadline(description, by);
     }
@@ -86,35 +94,30 @@ public class Parser {
         String details = command.substring("event".length()).trim();
         if (details.startsWith("/from") || details.startsWith("/to")) {
             throw new NobException("Description should not be empty.\n"
-                    + "Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+                    + EVENT_USAGE + "\n" + EVENT_EXAMPLE);
         }
 
-        int fromIndex = details.indexOf(" /from ");
-        int toIndex = details.indexOf(" /to ");
-        if (fromIndex < 1 || toIndex <= fromIndex + " /from ".length()
-                || toIndex + " /to ".length() == details.length()) {
+        int fromIndex = details.indexOf(EVENT_START_DELIMITER);
+        int toIndex = details.indexOf(EVENT_END_DELIMITER);
+        if (fromIndex < 1 || toIndex <= fromIndex + EVENT_START_DELIMITER.length()
+                || toIndex + EVENT_END_DELIMITER.length() == details.length()) {
             if (details.contains("/from") || details.contains("/to")) {
                 throw new NobException("Check that there is a space before and after '/from' and '/to'.\n"
-                        + "Use: event DESCRIPTION /from START /to END\n"
-                        + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+                        + EVENT_USAGE + "\n" + EVENT_EXAMPLE);
             }
-            throw new NobException("Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+            throw new NobException(EVENT_USAGE + "\n" + EVENT_EXAMPLE);
         }
 
         String description = details.substring(0, fromIndex).trim();
         if (description.isEmpty()) {
             throw new NobException("Description should not be empty.\n"
-                    + "Use: event DESCRIPTION /from START /to END\n"
-                    + "(eg., event project meeting /from Mon 2pm /to 4pm)");
+                    + EVENT_USAGE + "\n" + EVENT_EXAMPLE);
         }
 
-        String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
-        String to = details.substring(toIndex + " /to ".length()).trim();
+        String from = details.substring(fromIndex + EVENT_START_DELIMITER.length(), toIndex).trim();
+        String to = details.substring(toIndex + EVENT_END_DELIMITER.length()).trim();
         if (from.isEmpty() || to.isEmpty()) {
-            throw new NobException("Event times should not be empty.\n"
-                    + "Use: event DESCRIPTION /from START /to END");
+            throw new NobException("Event times should not be empty.\n" + EVENT_USAGE);
         }
         return new Event(description, from, to);
     }

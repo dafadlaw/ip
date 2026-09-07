@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import nob.command.ClearCommand;
-import nob.command.Command;
 import nob.command.ExitCommand;
 import nob.command.HelpCommand;
 import nob.command.ListCommand;
@@ -58,44 +57,10 @@ public class Nob {
                 ui.showDivider();
 
                 try {
-                    if (command.equals("bye")) {
-                        Command exitCommand = new ExitCommand();
-                        exitCommand.execute(tasks, ui, storage);
+                    boolean shouldExit = executeCommand(command, tasks, storage, ui);
+                    if (shouldExit) {
                         ui.showDivider();
                         break;
-                    }
-
-                    if (command.equals("help")) {
-                        Command helpCommand = new HelpCommand();
-                        helpCommand.execute(tasks, ui, storage);
-                    } else if (command.equals("clear")) {
-                        Command clearCommand = new ClearCommand();
-                        clearCommand.execute(tasks, ui, storage);
-                    } else if (command.equals("list")) {
-                        Command listCommand = new ListCommand();
-                        listCommand.execute(tasks, ui, storage);
-                    } else if (command.equals("find") || command.startsWith("find ")) {
-                        findTasks(command, tasks, ui);
-                    } else if (command.startsWith("mark ")) {
-                        markTask(command, tasks, true, storage, ui);
-                    } else if (command.startsWith("unmark ")) {
-                        markTask(command, tasks, false, storage, ui);
-                    } else if (command.startsWith("delete ")) {
-                        deleteTask(command, tasks, storage, ui);
-                    } else if (command.equals("todo") || command.startsWith("todo ")) {
-                        addTask(Parser.parseTodo(command), tasks, storage, ui);
-                    } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                        addTask(Parser.parseDeadline(command), tasks, storage, ui);
-                    } else if (command.equals("event") || command.startsWith("event ")) {
-                        addTask(Parser.parseEvent(command), tasks, storage, ui);
-                    } else if (command.startsWith("todo")) {
-                        ui.showMissingSpaceHint("todo", command);
-                    } else if (command.startsWith("deadline")) {
-                        ui.showMissingSpaceHint("deadline", command);
-                    } else if (command.startsWith("event")) {
-                        ui.showMissingSpaceHint("event", command);
-                    } else {
-                        ui.showUnknownCommandHint();
                     }
                 } catch (NobException exception) {
                     ui.showError(exception.getMessage());
@@ -106,6 +71,69 @@ public class Nob {
         } catch (IOException exception) {
             ui.showInputError();
             exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Executes one command entered through the console.
+     *
+     * @param command The command entered by the user.
+     * @param tasks The user's task list.
+     * @param storage Persistent task storage.
+     * @param ui The console user interface.
+     * @return {@code true} if Nob should stop accepting commands.
+     * @throws NobException If the command contains invalid task details.
+     */
+    private static boolean executeCommand(String command, TaskList tasks, Storage storage, Ui ui)
+            throws NobException {
+        if (command.equals("bye")) {
+            new ExitCommand().execute(tasks, ui, storage);
+            return true;
+        }
+        if (command.equals("help")) {
+            new HelpCommand().execute(tasks, ui, storage);
+        } else if (command.equals("clear")) {
+            new ClearCommand().execute(tasks, ui, storage);
+        } else if (command.equals("list")) {
+            new ListCommand().execute(tasks, ui, storage);
+        } else {
+            executeTaskCommand(command, tasks, storage, ui);
+        }
+        return false;
+    }
+
+    /** Executes a command that queries or modifies tasks. */
+    private static void executeTaskCommand(String command, TaskList tasks, Storage storage, Ui ui)
+            throws NobException {
+        if (command.equals("find") || command.startsWith("find ")) {
+            findTasks(command, tasks, ui);
+        } else if (command.startsWith("mark ")) {
+            markTask(command, tasks, true, storage, ui);
+        } else if (command.startsWith("unmark ")) {
+            markTask(command, tasks, false, storage, ui);
+        } else if (command.startsWith("delete ")) {
+            deleteTask(command, tasks, storage, ui);
+        } else if (command.equals("todo") || command.startsWith("todo ")) {
+            addTask(Parser.parseTodo(command), tasks, storage, ui);
+        } else if (command.equals("deadline") || command.startsWith("deadline ")) {
+            addTask(Parser.parseDeadline(command), tasks, storage, ui);
+        } else if (command.equals("event") || command.startsWith("event ")) {
+            addTask(Parser.parseEvent(command), tasks, storage, ui);
+        } else {
+            showInvalidCommandHint(command, ui);
+        }
+    }
+
+    /** Shows the most relevant hint for an invalid command. */
+    private static void showInvalidCommandHint(String command, Ui ui) {
+        if (command.startsWith("todo")) {
+            ui.showMissingSpaceHint("todo", command);
+        } else if (command.startsWith("deadline")) {
+            ui.showMissingSpaceHint("deadline", command);
+        } else if (command.startsWith("event")) {
+            ui.showMissingSpaceHint("event", command);
+        } else {
+            ui.showUnknownCommandHint();
         }
     }
 
