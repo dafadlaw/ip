@@ -107,18 +107,27 @@ public class MainWindow {
     private String executeCommand(String command) throws NobException {
         if (command.equals("bye")) {
             return "Goodbye! Hope to see you soon mate!";
-        } else if (command.equals("help")) {
+        }
+        if (command.equals("help")) {
             return "Here are the commands you can use:\n"
                     + "list\ntodo DESCRIPTION\ndeadline DESCRIPTION /by DATE_OR_TIME\n"
                     + "event DESCRIPTION /from START /to END\nfind KEYWORD\n"
                     + "mark TASK_NUMBER\nunmark TASK_NUMBER\ndelete TASK_NUMBER\nclear\nbye";
-        } else if (command.equals("clear")) {
+        }
+        if (command.equals("clear")) {
             tasks.clear();
             saveTasks();
             return "Noted. I've cleared the entire task list.";
-        } else if (command.equals("list")) {
+        }
+        if (command.equals("list")) {
             return getTaskListResponse();
-        } else if (command.equals("find") || command.startsWith("find ")) {
+        }
+        return executeTaskCommand(command);
+    }
+
+    /** Executes a command that queries or modifies tasks and returns Nob's reply. */
+    private String executeTaskCommand(String command) throws NobException {
+        if (command.equals("find") || command.startsWith("find ")) {
             return findTasks(command);
         } else if (command.startsWith("mark ")) {
             return updateTaskStatus(command, true);
