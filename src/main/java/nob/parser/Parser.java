@@ -32,9 +32,9 @@ public class Parser {
      */
     public static Task parseTodo(String command) throws NobException {
         assert command != null : "The dispatcher must provide a command";
-        assert command.equals("todo") || command.startsWith("todo ")
+        assert command.equals(TODO_COMMAND) || command.startsWith(TODO_COMMAND + " ")
                 : "parseTodo must only receive todo commands";
-        String description = command.substring("todo".length()).trim();
+        String description = command.substring(TODO_COMMAND.length()).trim();
         if (description.isEmpty()) {
             throw new NobException(TODO_USAGE);
         }
@@ -50,9 +50,9 @@ public class Parser {
      */
     public static Task parseDeadline(String command) throws NobException {
         assert command != null : "The dispatcher must provide a command";
-        assert command.equals("deadline") || command.startsWith("deadline ")
+        assert command.equals(DEADLINE_COMMAND) || command.startsWith(DEADLINE_COMMAND + " ")
                 : "parseDeadline must only receive deadline commands";
-        String details = command.substring("deadline".length()).trim();
+        String details = command.substring(DEADLINE_COMMAND.length()).trim();
         if (details.startsWith("/by")) {
             throw new NobException("Description should not be empty.\n"
                     + DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
@@ -89,9 +89,9 @@ public class Parser {
      */
     public static Task parseEvent(String command) throws NobException {
         assert command != null : "The dispatcher must provide a command";
-        assert command.equals("event") || command.startsWith("event ")
+        assert command.equals(EVENT_COMMAND) || command.startsWith(EVENT_COMMAND + " ")
                 : "parseEvent must only receive event commands";
-        String details = command.substring("event".length()).trim();
+        String details = command.substring(EVENT_COMMAND.length()).trim();
         if (details.startsWith("/from") || details.startsWith("/to")) {
             throw new NobException("Description should not be empty.\n"
                     + EVENT_USAGE + "\n" + EVENT_EXAMPLE);

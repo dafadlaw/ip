@@ -80,17 +80,15 @@ public class Storage {
      * @return {@code true} if the task file was written successfully.
      */
     public boolean saveTasks(Task[] tasks, int taskCount) {
-        String fileContents = Arrays.stream(tasks, 0, taskCount)
-                .map(task -> task + System.lineSeparator())
-                .collect(Collectors.joining());
         assert tasks != null : "Saving requires a source task array";
         assert taskCount >= 0 && taskCount <= tasks.length
                 : "The saved task count must fit within the source array";
-        StringBuilder fileContents = new StringBuilder();
-        for (int index = 0; index < taskCount; index++) {
-            assert tasks[index] != null : "Every saved task slot below the task count must be occupied";
-            fileContents.append(tasks[index]).append(System.lineSeparator());
-        }
+        assert Arrays.stream(tasks, 0, taskCount).allMatch(task -> task != null)
+                : "Every saved task slot below the task count must be occupied";
+
+        String fileContents = Arrays.stream(tasks, 0, taskCount)
+                .map(task -> task + System.lineSeparator())
+                .collect(Collectors.joining());
 
         try {
             Files.createDirectories(filePath.getParent());
@@ -104,7 +102,7 @@ public class Storage {
     /** Parses one task line written by {@link #saveTasks(Task[], int)}. */
     private Task parseTask(String savedTask) {
         assert savedTask != null : "Files.readAllLines must not produce null lines";
-        if (savedTask.length() < 7 || !(savedTask.endsWith("[ ]") || savedTask.endsWith("[✓]"))) {
+        if (!hasValidStatusSuffix(savedTask)) {
             return null;
         }
 
