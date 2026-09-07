@@ -57,6 +57,9 @@ public class MainWindow {
     /** Initializes data and bindings after the FXML controls have been injected. */
     @FXML
     public void initialize() {
+        assert scrollPane != null : "MainWindow.fxml must inject scrollPane";
+        assert dialogContainer != null : "MainWindow.fxml must inject dialogContainer";
+        assert userInput != null : "MainWindow.fxml must inject userInput";
         initialiseTasks();
         userAvatar = loadAvatar(USER_AVATAR_PATH);
         nobAvatar = loadAvatar(NOB_AVATAR_PATH);

@@ -1,6 +1,7 @@
 package nob.ui;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,9 @@ public class DialogBox extends HBox {
     /** Loads and configures a dialog box for the specified speaker. */
     private DialogBox(String text, Image avatarImage, String fallbackAvatar, boolean isUser) {
         try {
-            FXMLLoader loader = new FXMLLoader(DialogBox.class.getResource("/view/DialogBox.fxml"));
+            URL dialogBoxResource = DialogBox.class.getResource("/view/DialogBox.fxml");
+            assert dialogBoxResource != null : "The application package must contain DialogBox.fxml";
+            FXMLLoader loader = new FXMLLoader(dialogBoxResource);
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
@@ -30,6 +33,7 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Unable to load a dialog box.", exception);
         }
 
+        assert dialog != null : "DialogBox.fxml must inject dialog";
         dialog.setText(text);
         dialog.getStyleClass().add(isUser ? "user-bubble" : "nob-bubble");
         Node avatar = createAvatar(avatarImage, fallbackAvatar);

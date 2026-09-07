@@ -31,7 +31,10 @@ public class Parser {
      * @throws NobException If the description is missing.
      */
     public static Task parseTodo(String command) throws NobException {
-        String description = command.substring(TODO_COMMAND.length()).trim();
+        assert command != null : "The dispatcher must provide a command";
+        assert command.equals("todo") || command.startsWith("todo ")
+                : "parseTodo must only receive todo commands";
+        String description = command.substring("todo".length()).trim();
         if (description.isEmpty()) {
             throw new NobException(TODO_USAGE);
         }
@@ -46,7 +49,10 @@ public class Parser {
      * @throws NobException If the command syntax is invalid.
      */
     public static Task parseDeadline(String command) throws NobException {
-        String details = command.substring(DEADLINE_COMMAND.length()).trim();
+        assert command != null : "The dispatcher must provide a command";
+        assert command.equals("deadline") || command.startsWith("deadline ")
+                : "parseDeadline must only receive deadline commands";
+        String details = command.substring("deadline".length()).trim();
         if (details.startsWith("/by")) {
             throw new NobException("Description should not be empty.\n"
                     + DEADLINE_USAGE + "\n" + DEADLINE_EXAMPLE);
@@ -82,7 +88,10 @@ public class Parser {
      * @throws NobException If the command syntax is invalid.
      */
     public static Task parseEvent(String command) throws NobException {
-        String details = command.substring(EVENT_COMMAND.length()).trim();
+        assert command != null : "The dispatcher must provide a command";
+        assert command.equals("event") || command.startsWith("event ")
+                : "parseEvent must only receive event commands";
+        String details = command.substring("event".length()).trim();
         if (details.startsWith("/from") || details.startsWith("/to")) {
             throw new NobException("Description should not be empty.\n"
                     + EVENT_USAGE + "\n" + EVENT_EXAMPLE);
@@ -121,6 +130,10 @@ public class Parser {
      * @throws NobException If the task number is not an integer.
      */
     public static int parseTaskNumber(String command) throws NobException {
+        assert command != null : "The dispatcher must provide a command";
+        assert command.startsWith("mark ") || command.startsWith("unmark ")
+                || command.startsWith("delete ")
+                : "Task-number parsing requires a mark, unmark, or delete command";
         String numberText = command.substring(command.indexOf(' ') + 1).trim();
         try {
             return Integer.parseInt(numberText);

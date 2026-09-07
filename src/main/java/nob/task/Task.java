@@ -15,9 +15,11 @@ public class Task {
     /**
      * Creates an incomplete task with the given description.
      *
-     * @param description Text describing the task.
+    * @param description Text describing the task.
      */
     public Task(String description) {
+        assert description != null : "Task descriptions must not be null";
+        assert !description.isBlank() : "Task descriptions must not be blank after parsing";
         this.description = description;
         this.isDone = false;
     }
@@ -48,6 +50,8 @@ public class Task {
      * @return Whether the task description contains the keyword.
      */
     public boolean hasKeyword(String keyword) {
+        assert keyword != null : "Search keywords must not be null";
+        assert !keyword.isBlank() : "Search keywords must not be blank after parsing";
         return description.toLowerCase(Locale.ROOT).contains(keyword.toLowerCase(Locale.ROOT));
     }
 

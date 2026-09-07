@@ -16,6 +16,16 @@ import nob.exception.NobException;
  */
 public class TaskListTest {
     /**
+     * Verifies that a loaded task count cannot include an empty array slot.
+     */
+    @Test
+    public void constructor_nullTaskWithinCount_assertionError() {
+        Task[] loadedTasks = {new Todo("first task"), null};
+
+        assertThrows(AssertionError.class, () -> new TaskList(loadedTasks, 2));
+    }
+
+    /**
      * Verifies that a task can be added while capacity remains.
      */
     @Test
@@ -38,6 +48,16 @@ public class TaskListTest {
 
         assertFalse(taskList.addTask(new Todo("second task")));
         assertEquals(1, taskList.getTaskCount());
+    }
+
+    /**
+     * Verifies that a null task cannot be added to the list.
+     */
+    @Test
+    public void addTask_nullTask_assertionError() {
+        TaskList taskList = new TaskList(1);
+
+        assertThrows(AssertionError.class, () -> taskList.addTask(null));
     }
 
     /**
