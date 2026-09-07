@@ -3,7 +3,9 @@ package nob.storage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import nob.exception.NobException;
 import nob.task.Deadline;
@@ -67,14 +69,13 @@ public class Storage {
      * @return {@code true} if the task file was written successfully.
      */
     public boolean saveTasks(Task[] tasks, int taskCount) {
-        StringBuilder fileContents = new StringBuilder();
-        for (int index = 0; index < taskCount; index++) {
-            fileContents.append(tasks[index]).append(System.lineSeparator());
-        }
+        String fileContents = Arrays.stream(tasks, 0, taskCount)
+                .map(task -> task + System.lineSeparator())
+                .collect(Collectors.joining());
 
         try {
             Files.createDirectories(filePath.getParent());
-            Files.writeString(filePath, fileContents.toString());
+            Files.writeString(filePath, fileContents);
         } catch (IOException exception) {
             return false;
         }
