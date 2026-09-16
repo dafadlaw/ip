@@ -33,13 +33,10 @@ jobs:
         shell: bash
         run: ./gradlew clean check shadowJar
 
-      - name: Run console UI tests
+      - name: Run console UI tests on Linux
+        if: runner.os == 'Linux'
         shell: bash
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            chcp.com 65001 > /dev/null
-          fi
-          bash .codex/skills/test-ui/scripts/run-ui-tests.sh
+        run: bash .codex/skills/test-ui/scripts/run-ui-tests.sh
 
       - name: Install Linux virtual display
         if: runner.os == 'Linux'
