@@ -35,7 +35,11 @@ jobs:
 
       - name: Run console UI tests
         shell: bash
-        run: bash .codex/skills/test-ui/scripts/run-ui-tests.sh
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            chcp.com 65001 > /dev/null
+          fi
+          bash .codex/skills/test-ui/scripts/run-ui-tests.sh
 
       - name: Install Linux virtual display
         if: runner.os == 'Linux'
