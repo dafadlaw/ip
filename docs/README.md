@@ -3,7 +3,7 @@
 Nob is a friendly desktop task manager that helps you keep track of to-dos,
 deadlines, and events using short text commands.
 
-![Nob showing its help message and a completed task](UI.png)
+![Nob showing its help message and a completed task](Ui.png)
 
 ## Quick start
 
