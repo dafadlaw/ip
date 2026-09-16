@@ -25,6 +25,37 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
+=== Starts without a data file ===
+Command:
+rm -rf data && javac -d out $(find src/main/java -name '*.java' ! -name 'GuiNob.java' ! -name 'Launcher.java' ! -name 'DialogBox.java' ! -name 'MainWindow.java') && printf 'list\nbye\n' | java -cp out nob.Nob
+
+Console input:
+
+Console output:
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+RESULT: PASSED
 === Saves tasks after each change ===
 Command:
 rm -rf data && javac -d out $(find src/main/java -name '*.java' ! -name 'GuiNob.java' ! -name 'Launcher.java' ! -name 'DialogBox.java' ! -name 'MainWindow.java') && java -cp out nob.Nob && cat data/nob.txt
@@ -717,4 +748,4 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 RESULT: PASSED
-All 16 UI test case(s) passed.
+All 17 UI test case(s) passed.

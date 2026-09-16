@@ -8,11 +8,11 @@ deadlines, and events using short text commands.
 ## Quick start
 
 1. Ensure that Java 25 or later is installed.
-2. Open a terminal in the folder containing `duke.jar`.
+2. Open a terminal in the folder containing `nob.jar`.
 3. Start Nob:
 
    ```sh
-   java -jar duke.jar
+   java -jar nob.jar
    ```
 
    If you are running Nob from its source repository instead, use:

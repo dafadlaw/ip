@@ -42,6 +42,48 @@ Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
 
+## Test Case: Starts without a data file
+
+- **Aim:** Verify that Nob treats a missing data file as an empty task list instead of failing at startup.
+- **Command**
+
+```sh
+rm -rf data && javac -d out $(find src/main/java -name '*.java' ! -name 'GuiNob.java' ! -name 'Launcher.java' ! -name 'DialogBox.java' ! -name 'MainWindow.java') && printf 'list\nbye\n' | java -cp out nob.Nob
+```
+
+- **Input**
+
+```text
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
 ## Test Case: Saves tasks after each change
 
 - **Aim:** Verify that adding, marking, and deleting tasks automatically writes the current task list to disk.
