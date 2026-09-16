@@ -11,12 +11,18 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
 /**
- * Displays one user or Nob message as a chatbot dialog bubble.
+ * Displays a user command bubble or a branded Nob response panel.
  */
 public class DialogBox extends HBox {
+    private static final double USER_MESSAGE_MAX_WIDTH = 360;
+    private static final double NOB_AVATAR_SIZE = 40;
+    private static final double NOB_AVATAR_RADIUS = NOB_AVATAR_SIZE / 2;
+
     @FXML
     private Label dialog;
 
@@ -35,14 +41,38 @@ public class DialogBox extends HBox {
 
         assert dialog != null : "DialogBox.fxml must inject dialog";
         dialog.setText(text);
-        dialog.getStyleClass().add(isUser ? "user-bubble" : "nob-bubble");
-        Node avatar = createAvatar(avatarImage, fallbackAvatar);
-        setAlignment(isUser ? Pos.TOP_RIGHT : Pos.TOP_LEFT);
         if (isUser) {
-            getChildren().setAll(dialog, avatar);
+            configureUserMessage();
         } else {
-            getChildren().setAll(avatar, dialog);
+            configureNobResponse(avatarImage, fallbackAvatar);
         }
+    }
+
+    /** Configures a compact message bubble for a command entered by the user. */
+    private void configureUserMessage() {
+        getStyleClass().add("user-dialog");
+        dialog.getStyleClass().add("user-bubble");
+        dialog.setMaxWidth(USER_MESSAGE_MAX_WIDTH);
+        setAlignment(Pos.TOP_RIGHT);
+        getChildren().setAll(dialog);
+    }
+
+    /** Configures a wider, branded response panel for a reply produced by Nob. */
+    private void configureNobResponse(Image avatarImage, String fallbackAvatar) {
+        getStyleClass().add("nob-dialog");
+        dialog.getStyleClass().add("nob-response");
+        dialog.setMaxWidth(Double.MAX_VALUE);
+
+        Label speakerLabel = new Label("NOB");
+        speakerLabel.getStyleClass().add("nob-name");
+        VBox responseContent = new VBox(4, speakerLabel, dialog);
+        responseContent.getStyleClass().add("nob-response-content");
+        responseContent.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(responseContent, Priority.ALWAYS);
+
+        Node avatar = createAvatar(avatarImage, fallbackAvatar);
+        setAlignment(Pos.TOP_LEFT);
+        getChildren().setAll(avatar, responseContent);
     }
 
     /** Returns a circular image avatar, or an emoji avatar when the image is unavailable. */
@@ -54,26 +84,25 @@ public class DialogBox extends HBox {
         }
 
         ImageView avatarView = new ImageView(avatarImage);
-        avatarView.setFitWidth(44);
-        avatarView.setFitHeight(44);
+        avatarView.setFitWidth(NOB_AVATAR_SIZE);
+        avatarView.setFitHeight(NOB_AVATAR_SIZE);
         avatarView.setPreserveRatio(false);
-        avatarView.setClip(new Circle(22, 22, 22));
+        avatarView.setClip(new Circle(NOB_AVATAR_RADIUS, NOB_AVATAR_RADIUS, NOB_AVATAR_RADIUS));
         return avatarView;
     }
 
     /**
-     * Returns a right-aligned dialog bubble for the user.
+     * Returns a compact, right-aligned command bubble for the user.
      *
      * @param text The user's message.
-     * @param avatarImage The user's avatar, or {@code null} to use the fallback emoji.
      * @return The formatted user dialog.
      */
-    public static DialogBox getUserDialog(String text, Image avatarImage) {
-        return new DialogBox(text, avatarImage, "🙂", true);
+    public static DialogBox getUserDialog(String text) {
+        return new DialogBox(text, null, "", true);
     }
 
     /**
-     * Returns a left-aligned dialog bubble for Nob.
+     * Returns a wide, left-aligned response panel for Nob.
      *
      * @param text Nob's response.
      * @param avatarImage Nob's avatar, or {@code null} to use the fallback emoji.

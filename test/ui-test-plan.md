@@ -871,13 +871,14 @@ If an environment is unavailable, record it as **Not tested** rather than treati
 ## Manual checks
 
 1. Start the GUI with `./gradlew run`. Confirm that the window opens at no less than 460 × 540,
-   the title is `Nob — Your task companion`, both avatars are visible, and the welcome bubble is
-   fully readable.
+   the title is `Nob — Your task companion`, Nob's avatar is visible, and the welcome response panel
+   is fully readable.
 2. Resize the window to its minimum size and then maximize it. Confirm that dialog text wraps,
    controls remain usable, no content overlaps, and the conversation can still be scrolled.
 3. Enter `todo read book`, a deadline with a parsed date, and an event with start/end times. Confirm
-   that user bubbles appear on the right, Nob bubbles appear on the left, and dates are displayed in
-   the same format as the console UI.
+   that user commands appear as compact dark bubbles on the right without avatars. Confirm that Nob
+   replies appear as wider white panels on the left with Nob's avatar, the `NOB` label, and a blue
+   accent edge. Dates should use the same format as the console UI.
 4. Enter `list`, `find BOOK`, `mark 1`, `unmark 1`, `delete 1`, and `clear`. Confirm that each response
    is correct and that the latest response scrolls into view automatically.
 5. Enter malformed commands such as `todo`, `deadline book /by`, `event meeting /from Monday`, and

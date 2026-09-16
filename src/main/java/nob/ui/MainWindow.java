@@ -27,9 +27,6 @@ public class MainWindow {
     /** The file used to persist Nob's tasks. */
     private static final Path DATA_FILE = Path.of("data", "nob.txt");
 
-    /** The classpath location of the user's avatar. */
-    private static final String USER_AVATAR_PATH = "/images/user-avatar.png";
-
     /** The classpath location of Nob's avatar. */
     private static final String NOB_AVATAR_PATH = "/images/nob-avatar.png";
 
@@ -48,9 +45,6 @@ public class MainWindow {
     /** Saves and loads the user's task list. */
     private Storage storage;
 
-    /** Picture displayed beside the user's messages, when one is available. */
-    private Image userAvatar;
-
     /** Picture displayed beside Nob's messages, when one is available. */
     private Image nobAvatar;
 
@@ -61,7 +55,6 @@ public class MainWindow {
         assert dialogContainer != null : "MainWindow.fxml must inject dialogContainer";
         assert userInput != null : "MainWindow.fxml must inject userInput";
         initialiseTasks();
-        userAvatar = loadAvatar(USER_AVATAR_PATH);
         nobAvatar = loadAvatar(NOB_AVATAR_PATH);
         dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) ->
                 scrollPane.setVvalue(1.0));
@@ -89,7 +82,7 @@ public class MainWindow {
             return;
         }
 
-        dialogContainer.getChildren().add(DialogBox.getUserDialog(command, userAvatar));
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(command));
         String response;
         try {
             response = executeCommand(command);

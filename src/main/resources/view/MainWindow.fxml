@@ -15,7 +15,7 @@
     <center>
         <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER">
             <content>
-                <VBox fx:id="dialogContainer" spacing="12.0" styleClass="dialog-container" />
+                <VBox fx:id="dialogContainer" spacing="16.0" styleClass="dialog-container" />
             </content>
         </ScrollPane>
     </center>
