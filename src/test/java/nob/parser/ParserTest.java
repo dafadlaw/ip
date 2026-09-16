@@ -115,6 +115,43 @@ public class ParserTest {
         assertEquals("[E: Mon 2pm to 4pm] team sync [ ]", task.toString());
     }
 
+    @Test
+    public void parseEvent_endDateTimeBeforeStart_exceptionThrown() {
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /from 2019-12-02 1900 /to 2019-12-02 1800"));
+
+        assertEquals("Event end time should not be before its start time.\n"
+                + "Use: event DESCRIPTION /from START /to END", exception.getMessage());
+    }
+
+    @Test
+    public void parseEvent_endTimeBeforeStart_exceptionThrown() {
+        NobException twelveHourException = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /from 5pm /to 4pm"));
+        NobException twentyFourHourException = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /from 17:00 /to 16:00"));
+
+        String expectedMessage = "Event end time should not be before its start time.\n"
+                + "Use: event DESCRIPTION /from START /to END";
+        assertEquals(expectedMessage, twelveHourException.getMessage());
+        assertEquals(expectedMessage, twentyFourHourException.getMessage());
+    }
+
+    @Test
+    public void parseEvent_endEqualsStart_eventCreated() throws NobException {
+        Task task = Parser.parseEvent("event instant sync /from 5pm /to 5pm");
+
+        assertEquals("[E: 5pm to 5pm] instant sync [ ]", task.toString());
+    }
+
+    @Test
+    public void parseEvent_endAfterStart_eventCreated() throws NobException {
+        Task task = Parser.parseEvent("event team sync /from 2019-12-02 1800 /to 2019-12-03 0900");
+
+        assertEquals("[E: Dec 02 2019, 6:00PM to Dec 03 2019, 9:00AM] team sync [ ]",
+                task.toString());
+    }
+
     /**
      * Verifies that an event command without a description is rejected.
      */

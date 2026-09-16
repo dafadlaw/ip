@@ -848,6 +848,57 @@ Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
 
+## Test Case: Rejects an event whose end is before its start
+
+- **Aim:** Verify that a chronologically reversed event is rejected and is not added to the task list.
+- **Command**
+
+```sh
+rm -rf data && javac -d out $(find src/main/java -name '*.java' ! -name 'GuiNob.java' ! -name 'Launcher.java' ! -name 'DialogBox.java' ! -name 'MainWindow.java') && java -cp out nob.Nob
+```
+
+- **Input**
+
+```text
+event backwards meeting /from 2019-12-02 1900 /to 2019-12-02 1800
+list
+bye
+```
+
+- **Expected output**
+
+```text
+____________________________________________________________
+ _   _       _
+| \ | | ___ | |__
+|  \| |/ _ \| '_ \
+| |\  | (_) | |_) |
+|_| \_|\___/|_.__/
+
+  (•_•)
+  ( •_•)>⌐■-■
+  (⌐■_■)
+
+WASSUP! I'm Nob :)
+How can I help you?
+____________________________________________________________
+
+____________________________________________________________
+Event end time should not be before its start time.
+Use: event DESCRIPTION /from START /to END
+____________________________________________________________
+
+
+____________________________________________________________
+Your task list is empty right now. Add a task using the 'todo', 'deadline' or 'event' commands.
+____________________________________________________________
+
+
+____________________________________________________________
+Goodbye! Hope to see you soon mate!
+____________________________________________________________
+```
+
 # Manual GUI test matrix
 
 The JavaFX interface depends on a graphical desktop, window manager, fonts, and platform-specific

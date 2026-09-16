@@ -1,10 +1,19 @@
 package nob.parser;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
+import java.util.Optional;
+
 import nob.exception.NobException;
 import nob.task.Deadline;
 import nob.task.Event;
 import nob.task.Task;
 import nob.task.Todo;
+import nob.util.DateTimeUtil;
 
 /**
  * Interprets command arguments and creates the corresponding task objects.
@@ -22,6 +31,15 @@ public class Parser {
     private static final String DEADLINE_EXAMPLE = "(eg., deadline return book /by Sunday)";
     private static final String EVENT_USAGE = "Use: event DESCRIPTION /from START /to END";
     private static final String EVENT_EXAMPLE = "(eg., event project meeting /from Mon 2pm /to 4pm)";
+
+    private static final DateTimeFormatter[] TIME_ONLY_FORMATTERS = new DateTimeFormatter[] {
+            new DateTimeFormatterBuilder()
+                    .parseCaseInsensitive()
+                    .appendPattern("h[:mm]a")
+                    .toFormatter(Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("H:mm", Locale.ENGLISH),
+            DateTimeFormatter.ofPattern("HHmm", Locale.ENGLISH)
+    };
 
     /**
      * Parses a {@code todo DESCRIPTION} command into a to-do task.
@@ -119,7 +137,36 @@ public class Parser {
         if (from.isEmpty() || to.isEmpty()) {
             throw new NobException("Event times should not be empty.\n" + EVENT_USAGE);
         }
+        if (isEndBeforeStart(from, to)) {
+            throw new NobException("Event end time should not be before its start time.\n"
+                    + EVENT_USAGE);
+        }
         return new Event(description, from, to);
+    }
+
+    /** Returns whether two recognized event endpoints are in reverse chronological order. */
+    private static boolean isEndBeforeStart(String from, String to) {
+        Optional<LocalDateTime> fromDateTime = DateTimeUtil.parseDateTime(from);
+        Optional<LocalDateTime> toDateTime = DateTimeUtil.parseDateTime(to);
+        if (fromDateTime.isPresent() && toDateTime.isPresent()) {
+            return toDateTime.get().isBefore(fromDateTime.get());
+        }
+
+        Optional<LocalTime> fromTime = parseTimeOnly(from);
+        Optional<LocalTime> toTime = parseTimeOnly(to);
+        return fromTime.isPresent() && toTime.isPresent() && toTime.get().isBefore(fromTime.get());
+    }
+
+    /** Parses a time without attaching an artificial date. */
+    private static Optional<LocalTime> parseTimeOnly(String value) {
+        for (DateTimeFormatter formatter : TIME_ONLY_FORMATTERS) {
+            try {
+                return Optional.of(LocalTime.parse(value, formatter));
+            } catch (DateTimeParseException exception) {
+                // Try the next supported time format.
+            }
+        }
+        return Optional.empty();
     }
 
     /**
