@@ -15,6 +15,18 @@ import nob.exception.NobException;
  * Tests task storage, retrieval, updates, and deletion in {@link TaskList}.
  */
 public class TaskListTest {
+    @Test
+    public void constructor_negativeCapacity_assertionError() {
+        assertThrows(AssertionError.class, () -> new TaskList(-1));
+    }
+
+    @Test
+    public void constructor_invalidLoadedArguments_assertionError() {
+        assertThrows(AssertionError.class, () -> new TaskList(null, 0));
+        assertThrows(AssertionError.class, () -> new TaskList(new Task[1], -1));
+        assertThrows(AssertionError.class, () -> new TaskList(new Task[1], 2));
+    }
+
     /**
      * Verifies that a loaded task count cannot include an empty array slot.
      */
@@ -89,6 +101,18 @@ public class TaskListTest {
         assertEquals(2, taskList.getTaskCount());
         assertSame(firstTask, taskList.getTask(1));
         assertSame(lastTask, taskList.getTask(2));
+        assertNull(taskList.getTasks()[2]);
+    }
+
+    @Test
+    public void deleteTask_onlyTask_listBecomesEmpty() throws NobException {
+        TaskList taskList = new TaskList(1);
+        Task task = new Todo("only task");
+        taskList.addTask(task);
+
+        assertSame(task, taskList.deleteTask(1));
+        assertEquals(0, taskList.getTaskCount());
+        assertNull(taskList.getTasks()[0]);
     }
 
     /**
@@ -105,6 +129,15 @@ public class TaskListTest {
         assertEquals(0, taskList.getTaskCount());
         assertNull(taskList.getTasks()[0]);
         assertNull(taskList.getTasks()[1]);
+    }
+
+    @Test
+    public void clear_emptyList_remainsEmpty() {
+        TaskList taskList = new TaskList(0);
+
+        taskList.clear();
+
+        assertEquals(0, taskList.getTaskCount());
     }
 
     /**

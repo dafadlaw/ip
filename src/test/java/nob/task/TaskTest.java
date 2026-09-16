@@ -16,6 +16,7 @@ public class TaskTest {
      */
     @Test
     public void constructor_blankDescription_assertionError() {
+        assertThrows(AssertionError.class, () -> new Task(null));
         assertThrows(AssertionError.class, () -> new Task("   "));
     }
 
@@ -91,6 +92,7 @@ public class TaskTest {
     public void hasKeyword_blankKeyword_assertionError() {
         Task task = new Task("Read the library book");
 
+        assertThrows(AssertionError.class, () -> task.hasKeyword(null));
         assertThrows(AssertionError.class, () -> task.hasKeyword(" "));
     }
 }

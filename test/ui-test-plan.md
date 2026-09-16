@@ -847,3 +847,49 @@ ____________________________________________________________
 Goodbye! Hope to see you soon mate!
 ____________________________________________________________
 ```
+
+# Manual GUI test matrix
+
+The JavaFX interface depends on a graphical desktop, window manager, fonts, and platform-specific
+rendering. Run the checks below after the automated console and JUnit suites pass. Use a fresh copy
+of `data/nob.txt` for each environment, and record the OS version, display scale, resolution, and
+system language with the result.
+
+## Environments
+
+Test at least these representative configurations when they are available:
+
+| Platform | Resolution and scale | System language |
+| --- | --- | --- |
+| macOS | 1440 × 900 at default scaling | English |
+| Windows 11 | 1920 × 1080 at 100% scaling | English |
+| Windows 11 | 1920 × 1080 at 150% scaling | Chinese |
+| Linux | 1366 × 768 at 100% scaling | English |
+
+If an environment is unavailable, record it as **Not tested** rather than treating it as passed.
+
+## Manual checks
+
+1. Start the GUI with `./gradlew run`. Confirm that the window opens at no less than 460 × 540,
+   the title is `Nob — Your task companion`, both avatars are visible, and the welcome bubble is
+   fully readable.
+2. Resize the window to its minimum size and then maximize it. Confirm that dialog text wraps,
+   controls remain usable, no content overlaps, and the conversation can still be scrolled.
+3. Enter `todo read book`, a deadline with a parsed date, and an event with start/end times. Confirm
+   that user bubbles appear on the right, Nob bubbles appear on the left, and dates are displayed in
+   the same format as the console UI.
+4. Enter `list`, `find BOOK`, `mark 1`, `unmark 1`, `delete 1`, and `clear`. Confirm that each response
+   is correct and that the latest response scrolls into view automatically.
+5. Enter malformed commands such as `todo`, `deadline book /by`, `event meeting /from Monday`, and
+   `mark zebra`. Confirm that the errors are readable and that the app remains responsive.
+6. Enter a blank line and whitespace-only text. Confirm that no dialog bubble is added.
+7. Close and reopen the app after adding and marking tasks. Confirm that saved tasks and completion
+   states are restored.
+8. Temporarily make the data location unavailable, then add or clear a task. Confirm that the app
+   remains usable. Restore the location after the check.
+9. Enter enough messages to exceed the visible height. Confirm that the view follows the newest
+   message and older messages remain reachable by scrolling.
+10. Enter `bye`. Confirm that the farewell bubble appears before the app closes after approximately
+    one second.
+11. On the Chinese-language environment, repeat checks 1–5. Confirm that English command parsing,
+    date formatting, punctuation, the tick icon, and emoji do not change with the system locale.

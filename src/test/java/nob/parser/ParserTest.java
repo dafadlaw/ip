@@ -40,6 +40,11 @@ public class ParserTest {
         assertThrows(AssertionError.class, () -> Parser.parseTodo("event meeting"));
     }
 
+    @Test
+    public void parseTodo_nullCommand_assertionError() {
+        assertThrows(AssertionError.class, () -> Parser.parseTodo(null));
+    }
+
     /**
      * Verifies that a complete deadline command creates the expected task.
      */
@@ -74,6 +79,30 @@ public class ParserTest {
         assertEquals("Check that there is a space before and after '/by'.\n"
                 + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
                 + "(eg., deadline return book /by Sunday)", exception.getMessage());
+    }
+
+    @Test
+    public void parseDeadline_missingDelimiter_exceptionThrown() {
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseDeadline("deadline return book Friday"));
+
+        assertEquals("Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                + "(eg., deadline return book /by Sunday)", exception.getMessage());
+    }
+
+    @Test
+    public void parseDeadline_missingTime_exceptionThrown() {
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseDeadline("deadline return book /by "));
+
+        assertEquals("Check that there is a space before and after '/by'.\n"
+                + "Use: deadline DESCRIPTION /by DATE_OR_TIME\n"
+                + "(eg., deadline return book /by Sunday)", exception.getMessage());
+    }
+
+    @Test
+    public void parseDeadline_wrongCommand_assertionError() {
+        assertThrows(AssertionError.class, () -> Parser.parseDeadline("todo read book"));
     }
 
     /**
@@ -112,6 +141,34 @@ public class ParserTest {
                 + "(eg., event project meeting /from Mon 2pm /to 4pm)", exception.getMessage());
     }
 
+    @Test
+    public void parseEvent_missingDelimiters_exceptionThrown() {
+        NobException exception = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync Monday Tuesday"));
+
+        assertEquals("Use: event DESCRIPTION /from START /to END\n"
+                + "(eg., event project meeting /from Mon 2pm /to 4pm)", exception.getMessage());
+    }
+
+    @Test
+    public void parseEvent_missingStartOrEndTime_exceptionThrown() {
+        NobException missingStartException = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /from  /to Tuesday"));
+        NobException missingEndException = assertThrows(NobException.class, () ->
+                Parser.parseEvent("event team sync /from Monday /to "));
+
+        String expectedMessage = "Check that there is a space before and after '/from' and '/to'.\n"
+                + "Use: event DESCRIPTION /from START /to END\n"
+                + "(eg., event project meeting /from Mon 2pm /to 4pm)";
+        assertEquals(expectedMessage, missingStartException.getMessage());
+        assertEquals(expectedMessage, missingEndException.getMessage());
+    }
+
+    @Test
+    public void parseEvent_wrongCommand_assertionError() {
+        assertThrows(AssertionError.class, () -> Parser.parseEvent("todo read book"));
+    }
+
     /**
      * Verifies that task numbers are parsed even when surrounded by extra spaces.
      */
@@ -128,5 +185,21 @@ public class ParserTest {
         NobException exception = assertThrows(NobException.class, () -> Parser.parseTaskNumber("delete two"));
 
         assertEquals("Please enter a valid task number.", exception.getMessage());
+    }
+
+    @Test
+    public void parseTaskNumber_emptyOrOutOfRangeValue_exceptionThrown() {
+        NobException emptyException = assertThrows(NobException.class, () -> Parser.parseTaskNumber("mark "));
+        NobException largeException = assertThrows(NobException.class, () ->
+                Parser.parseTaskNumber("unmark 999999999999999999999"));
+
+        assertEquals("Please enter a valid task number.", emptyException.getMessage());
+        assertEquals("Please enter a valid task number.", largeException.getMessage());
+    }
+
+    @Test
+    public void parseTaskNumber_wrongCommand_assertionError() {
+        assertThrows(AssertionError.class, () -> Parser.parseTaskNumber("todo 1"));
+        assertThrows(AssertionError.class, () -> Parser.parseTaskNumber(null));
     }
 }
