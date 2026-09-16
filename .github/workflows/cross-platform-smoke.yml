@@ -27,7 +27,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-          cache: gradle
 
       - name: Build and run automated checks
         shell: bash
